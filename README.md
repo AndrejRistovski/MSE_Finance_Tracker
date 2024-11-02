@@ -7,5 +7,7 @@ Project is made for the course Design and Architecture of Software at the Facult
 
 Team:
 Blagoj Ivanov - 221037
+
 Andrej Ristovski - 221084
+
 Nikola Todorov - 221086
