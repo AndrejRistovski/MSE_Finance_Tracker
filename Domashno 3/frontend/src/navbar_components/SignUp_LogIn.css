@@ -1,0 +1,421 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.subscribe_wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 750px;
+    height: 450px;
+    overflow: hidden;
+    border: 2px solid #00b7ff;
+    box-shadow: 0 0 25px #00b7ff;
+    background: linear-gradient(145deg, #09142b, #0f223c);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+.subscribe_wrapper .bg_animate_3 {
+    position: absolute;
+    top: -4px;
+    right: 0;
+    width: 850px;
+    height: 600px;
+    background: linear-gradient(45deg, #00214f, #00b7ff);
+    border-bottom: 3px solid #00b7ff;
+    transform: rotate(0) skewY(0);
+    transform-origin: bottom right;
+}
+
+.subscribe_wrapper .bg_animate_4 {
+    position: absolute;
+    top: 100%;
+    left: 250px;
+    width: 850px;
+    height: 700px;
+    background: #09142b;
+    border-top: 3px solid #00b7ff;
+    transform: rotate(-11deg) skewY(-41deg);
+    transform-origin: bottom left;
+}
+
+.subscribe_wrapper .form_box {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #00b7ff;
+}
+
+.subscribe_wrapper .form_box .input_box_1 {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.subscribe_wrapper .form_box.register {
+    right: 0;
+    padding: 0 40px 0 60px;
+}
+.subscribe_wrapper .form_box .input_box_1 input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    background: transparent;
+    border-bottom: 2px solid #00b7ff;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.subscribe_wrapper .form_box .log_in_btn {
+    background: #00b7ff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    box-shadow: 0 0 15px #00b7ff;
+    transition: 0.3s ease;
+}
+
+.subscribe_wrapper .form_box .log_in_btn:hover {
+    background: #007acc;
+    box-shadow: 0 0 20px #007acc;
+}
+
+.input_box_1 {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 25px 0;
+}
+
+.input_box_1 .input_type:focus ~ .log_in_label,
+.input_box_1 .input_type:valid ~ .log_in_label {
+    top: -5px;
+}
+
+.input_box_1 input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding-right: 28px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffffff;
+    border-bottom: 2px solid #00b7ff;
+    transition: 0.5s;
+}
+
+.input_box_1 .log_in_label {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
+    transition: 0.5s;
+    color: #00b7ff;
+}
+
+.input_box_1 .log_in_user {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 18px;
+    filter: invert(1);
+}
+
+.log_in_btn {
+    position: relative;
+    width: 100%;
+    height: 45px;
+    outline: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 16px;
+    color: ghostwhite;
+    font-weight: 600;
+    z-index: 1;
+    overflow: hidden;
+    border: 2px solid #00b7ff;
+}
+
+.log_in_btn::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 300%;
+    z-index: -1;
+    background-color: #00b7ff;
+    transition: 0.5s;
+    color: ghostwhite;
+}
+
+.log_in_btn:hover::before {
+    top: 0;
+    color: ghostwhite;
+}
+
+.log_in_btn:hover {
+    background: #00b7ff;
+    color: #09142b;
+}
+
+.log_reg_link p .register_link {
+    text-decoration: none;
+    font-weight: 600;
+    color: #00b7ff;
+}
+
+.log_reg_link p .register_link:hover {
+    text-decoration: underline;
+}
+
+.form_box .log_reg_link .home_link, .logIn_link {
+    font-size: 14px;
+    text-align: center;
+    margin: 20px 0 10px;
+    color: ghostwhite;
+}
+
+.subscribe_wrapper .info_text {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.subscribe_wrapper .info_text,
+.subscribe_wrapper .form_box {
+    width: 50%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.subscribe_wrapper .info_text.register {
+    left: 0;
+    text-align: left;
+    padding: 0 150px 60px 40px;
+}
+
+.subscribe_wrapper .info_text h2 {
+    font-size: 35px;
+    line-height: 1.3;
+    color: #00b7ff;
+    text-transform: uppercase;
+}
+
+.subscribe_wrapper .info_text p {
+    color: #cfd8ff;
+    font-size: 16px;
+}
+
+.animated_body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    background: linear-gradient(90deg, rgba(0, 55, 115, 1) 0%, #0e1b33 35%, #192840 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.animated_wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(90deg, rgba(0, 55, 115, 1) 0%, #0e1b33 35%, #192840 100%);
+}
+
+.animated_box div {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    border: 6px solid rgba(255, 255, 255, 0.8);
+}
+
+.animated_box div:nth-child(1) {
+    top: 12%;
+    left: 42%;
+    animation: animate 10s linear infinite;
+}
+
+.animated_box div:nth-child(2) {
+    top: 70%;
+    left: 50%;
+    animation: animate 7s linear infinite;
+}
+
+.animated_box div:nth-child(3) {
+    top: 17%;
+    left: 6%;
+    animation: animate 9s linear infinite;
+}
+
+.animated_box div:nth-child(4) {
+    top: 20%;
+    left: 60%;
+    animation: animate 10s linear infinite;
+}
+
+.animated_box div:nth-child(5) {
+    top: 67%;
+    left: 10%;
+    animation: animate 6s linear infinite;
+}
+
+.animated_box div:nth-child(6) {
+    top: 80%;
+    left: 90%;
+    animation: animate 12s linear infinite;
+}
+
+.animated_box div:nth-child(7) {
+    top: 60%;
+    left: 82%;
+    animation: animate 15s linear infinite;
+}
+
+.animated_box div:nth-child(8) {
+    top: 32%;
+    left: 25%;
+    animation: animate 16s linear infinite;
+}
+
+.animated_box div:nth-child(9) {
+    top: 90%;
+    left: 25%;
+    animation: animate 9s linear infinite;
+}
+
+.animated_box div:nth-child(10) {
+    top: 20%;
+    left: 90%;
+    animation: animate 5s linear infinite;
+}
+
+.animated_box div:nth-child(11) {
+    top: 90%;
+    left: 60%;
+    animation: animate 8s linear infinite;
+}
+
+@keyframes animate {
+    0% {
+        transform: scale(0) translateY(0) rotate(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.3) translateY(-90px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.form_box .h2 {
+    text-align: center;
+    font-size: 32px;
+}
+
+form .input_box_1 .input_type {
+    border-bottom: 2px solid ghostwhite;
+    color: ghostwhite;
+}
+
+.input_box_1 input:focus ~ .log_in_label,
+.input_box_1 input:valid ~ .log_in_label {
+    color: #ffffff;
+}
+
+.input_box_1 .log_in_user {
+    filter: invert(1);
+}
+
+@media screen and (max-width: 992px) {
+    .subscribe_wrapper {
+        flex-direction: column;
+        width: 90%;
+        height: 50%;
+        padding: 10px;
+        display: flex;
+    }
+
+    .subscribe_wrapper .info_text.register {
+        display: none;
+    }
+
+    .subscribe_wrapper .form_box {
+        width: 100%;
+        padding: 10px 5px;
+    }
+
+    .subscribe_wrapper .form_box .input_box_1 {
+        margin-bottom: 10px;
+    }
+
+    .subscribe_wrapper .form_box .input_box_1 input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .subscribe_wrapper .form_box .log_in_btn {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .subscribe_wrapper {
+        padding: 5px;
+    }
+
+    .subscribe_wrapper .form_box .input_box_1 input {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .subscribe_wrapper .form_box .log_in_btn {
+        font-size: 12px;
+        padding: 6px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .subscribe_wrapper {
+        width: 100%;
+        height: 60%;
+        padding: 5px;
+    }
+
+    .subscribe_wrapper .form_box .log_in_btn {
+        font-size: 10px;
+        padding: 4px;
+    }
+}
+
