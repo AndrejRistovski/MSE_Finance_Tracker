@@ -414,7 +414,7 @@ def scrape_all_sites():
     all_data.extend(scrape_biznisinfo_mk())
     all_data.extend(scrape_daily_mk())
     #all_data.extend(scrape_time_mk())
-    #all_data.extend(scrape_plusinfo_mk())
+    #all_data.extend(scrape_plusinfo_mk()) ;
     all_data.extend(scrape_centar_mk())
     all_data.extend(scrape_biznisvesti())
 
