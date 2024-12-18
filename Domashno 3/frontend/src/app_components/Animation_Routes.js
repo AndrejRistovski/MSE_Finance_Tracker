@@ -1,12 +1,14 @@
 import React from "react";
 import {Route, Routes, useLocation} from "react-router-dom";
 import App from "../App";
-import FAQ_Page from "../navbar_components/F.A.Q._Page";
-import Contact_Page from "../navbar_components/Contact_Page";
-import SignUp_Page from "../navbar_components/SignUp_Page"
-import Code from "../navbar_components/Code_Page";
-import LogIn_Page from "../navbar_components/LogIn_Page";
-import News from "../navbar_components/News_Page";
+import FAQ_Page from "../navbar_components/F_A_Q_Page/F.A.Q._Page";
+import Contact_Page from "../navbar_components/Contact_Page/Contact_Page";
+import SignUp_Page from "../navbar_components/LogIn_SignUp_Page/SignUp_Page"
+import Code from "../navbar_components/LogIn_SignUp_Page/Code_Page";
+import LogIn_Page from "../navbar_components/LogIn_SignUp_Page/LogIn_Page";
+import News from "../navbar_components/News_Page/News_Page";
+import Privacy_Policy from "../footer_components/Privacy_Policy";
+import Terms_Conditions from "../footer_components/Terms_Conditions";
 import {AnimatePresence} from "framer-motion";
 
 export default function Animation_Routes() {
@@ -22,6 +24,8 @@ export default function Animation_Routes() {
                 <Route path="log_in" element={<LogIn_Page/>}/>
                 <Route path="code" element={<Code/>}/>
                 <Route path="news" element={<News/>}/>
+                <Route path="/privacy_policy" element={<Privacy_Policy/>}/>
+                <Route path="/terms_of_service" element={<Terms_Conditions/>}/>
             </Routes>
         </AnimatePresence>
     )
