@@ -10,12 +10,14 @@
     align-items: center;
     justify-content: space-between;
     height: 60px;
-    padding: 0 5px;
-    background: linear-gradient(90deg, #0d0d24, #1a1a40);
+    padding: 0 10px;
+    background: linear-gradient(90deg, #0b0b0b, #101010);
+    border-bottom: 2px solid #007acc;
     position: fixed;
     width: 100%;
     z-index: 1000;
-    transition: background 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.9);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav_1::after {
@@ -24,8 +26,8 @@
     left: 0;
     bottom: -4px;
     width: 100%;
-    height: 10px;
-    background: linear-gradient(180deg, rgba(18, 18, 18, 0) 0%, rgba(255, 255, 255, 0.2) 100%);
+    height: 4px;
+    background: linear-gradient(90deg, #00b7ff, #007acc);
     pointer-events: none;
     transition: opacity 0.4s ease;
 }
@@ -54,9 +56,13 @@
     transition: color 0.3s ease;
 }
 
-.navbar li a:hover {
+.navbar li.number_1 a:hover,
+.navbar li.number_2 a:hover,
+.navbar li.number_3 a:hover,
+.navbar li.number_4 a:hover {
     color: #00d4ff;
 }
+
 
 .navbar li a:hover::after {
     width: 100%;
@@ -73,10 +79,10 @@
     transition: width 0.3s;
 }
 
-.navbar_text_logo {
-    color: #00d4ff;
-    font-family: Poppins, sans-serif;
-    font-weight: bold;
+.navbar_logo {
+    width: 140px;
+    height: auto;
+    margin-right: auto;
 }
 
 .navbar li:last-child {
@@ -97,30 +103,22 @@
 }
 
 .subscribe {
-    display: inline-block;
-    padding: 10px 30px;
-    font-size: 16px;
-    font-weight: 600;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    background: linear-gradient(90deg, #1e3a8a, #3b82f6, #60a5fa);
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(90deg, #00b7ff, #007acc);
     border: none;
-    border-radius: 30px 30px 30px 10px;
+    border-radius: 10px;
     cursor: pointer;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    margin-left: auto;
-    margin-right: auto;
+    box-shadow: 0 5px 15px rgba(0, 183, 255, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .subscribe:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    transform: translateY(-3px);
-}
-
-.subscribe:active {
-    transform: translateY(1px);
+    background: #00d4ff;
+    color: #ffffff;
+    box-shadow: 0 0 10px #00d4ff, 0 0 15px #1e90ff;
 }
 
 @media (max-width: 600px) {
@@ -174,4 +172,3 @@
         padding: 12px 28px;
     }
 }
-

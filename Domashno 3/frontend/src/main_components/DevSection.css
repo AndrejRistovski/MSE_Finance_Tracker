@@ -1,0 +1,134 @@
+.dev-section-container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dev-section-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #00b7ff;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0 0 15px rgba(0, 183, 255, 0.8);
+}
+
+.highlighted {
+    color: #007acc;
+}
+
+.dev-section-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+}
+
+.dev-section-text {
+    flex: 1;
+    max-width: 600px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+}
+
+.dev-section-description {
+    color: #a8d0e6;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    text-align: left;
+    margin: 20px 0 30px;
+}
+
+.btn-wrapper {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+    margin-top: 20px;
+}
+
+.btn-wrapper .primary {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(90deg, #00b7ff, #007acc);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 183, 255, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-wrapper .primary:hover {
+    background: linear-gradient(90deg, #007acc, #00b7ff);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 183, 255, 0.6);
+}
+
+.btn-wrapper .secondary {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #00b7ff;
+    background-color: transparent;
+    border: 2px solid #00b7ff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-wrapper .secondary:hover {
+    color: #ffffff;
+    background: #007acc;
+    border-color: #007acc;
+    box-shadow: 0 5px 15px rgba(0, 122, 204, 0.5);
+}
+
+.dev-section-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dev-section-image img {
+    max-height: 400px;
+    width: auto;
+    border-radius: 15px;
+}
+
+@media (max-width: 768px) {
+    .dev-section-wrapper {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .dev-section-text {
+        text-align: center;
+    }
+
+    .btn-wrapper {
+        justify-content: center;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .dev-section-title {
+        font-size: 2.5rem;
+    }
+
+    .dev-section-description {
+        font-size: 1rem;
+        text-align: center;
+    }
+}

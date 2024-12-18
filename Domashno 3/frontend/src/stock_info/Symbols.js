@@ -5,3 +5,5 @@ await fetch("api/symbols").then((res) => res.text())
     });
 
 export const SymbolsData = val;
+console.log("Symbols:")
+console.log(val)

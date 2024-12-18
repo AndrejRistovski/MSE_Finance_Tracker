@@ -1,0 +1,154 @@
+.finance-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    background: transparent;
+    position: relative;
+    width: 100%;
+}
+
+.finance-header {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, #00b7ff, #007acc);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 15px rgba(0, 183, 255, 0.8);
+    margin-bottom: 15px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.finance-subtitle {
+    color: #a8d0e6;
+    font-size: 1.2rem;
+    text-align: center;
+    max-width: 800px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.highlight {
+    color: #00b7ff;
+    text-shadow: 0 0 12px #00b7ff, 0 0 20px #007acc;
+}
+
+.animated-divider {
+    width: 70%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #00b7ff, #007acc, transparent);
+    animation: slide 3s infinite;
+    border-radius: 10px;
+    margin: 20px 0 40px;
+}
+
+@keyframes slide {
+    0% {
+        background-position: 0;
+    }
+    100% {
+        background-position: 100%;
+    }
+}
+
+/*.daily-stats-container {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    flex-wrap: wrap;*/
+/*    padding: 30px 40px;*/
+/*    border-radius: 20px;*/
+/*    gap: 20px;*/
+/*    width: 100%;*/
+/*    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.8);*/
+/*}*/
+
+.daily-stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+}
+
+.metric-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 25px;
+    border-radius: 18px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.8);
+    min-width: 160px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5), inset 0 1px 10px rgba(0, 0, 0, 0.3);
+}
+
+.metric-container::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.5) 0%, transparent 70%);
+    z-index: 0;
+    transition: all 0.3s ease-in-out;
+
+}
+
+.metric-container:hover::after {
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.5) 0%, transparent 80%);
+    top: -60%;
+    left: -60%;
+}
+
+.metric-container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 30px #00b7ff, 0 0 40px #007acc;
+}
+
+.metric-title {
+    color: #d1d1e0;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.metric-value {
+    font-size: 2.4rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00b7ff, #007acc);
+    -webkit-background-clip: text;
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+    color: #00b7ff;
+    text-shadow: 0 0 12px #00b7ff, 0 0 20px #007acc;
+}
+
+@media (max-width: 768px) {
+    .daily-stats-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        gap: 25px;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .metric-container {
+        width: 100%;
+        max-width: 300px;
+        padding: 20px;
+    }
+}
+
