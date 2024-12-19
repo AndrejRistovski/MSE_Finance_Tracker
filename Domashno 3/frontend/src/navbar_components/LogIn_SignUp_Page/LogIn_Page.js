@@ -1,74 +1,66 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import "./SignUp_LogIn.css";
-import {ReactComponent as Lock} from "../../images/images_svg/Lock.svg";
-import {ReactComponent as User_ID} from "../../images/images_svg/Name_and_Surname.svg";
-import {Link, useNavigate} from "react-router-dom";
+import { ReactComponent as Lock } from "../../images/images_svg/Lock.svg";
+import { ReactComponent as User_ID } from "../../images/images_svg/Name_and_Surname.svg";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import {asad} from "./Code_Page";
 
 export default function LogIn_Page() {
-
-    const [name, setName] = useState('');
-    const [surname, setSurname] = useState('');
-    const [email, setEmail] = useState('');
-
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [isFormValid, setIsFormValid] = useState(false);
     const navigate = useNavigate();
 
-    const [isFormValid, setIsFormValid] = useState(false);
 
-    const handleNameChange = (e) => {
-        setName(e.target.value);
+    const handleUsernameChange = (e) => {
+        setUsername(e.target.value);
         validateForm();
     };
 
-    const handleSurnameChange = (e) => {
-        setSurname(e.target.value);
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
         validateForm();
     };
 
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-        validateForm();
-    };
 
     const validateForm = () => {
-        if (name.trim() !== '' && surname.trim() !== '' && email.trim() !== '') {
-            setIsFormValid(true);
-        } else {
-            setIsFormValid(false);
-        }
+        setIsFormValid(username.trim() !== '' && password.trim() !== '');
     };
 
-    const signUpUser = (e) => {
-        e.preventDefault();
-        axios.post('/subscribe', {
-                name: name,
-                surname: surname,
-                email: email
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
 
-            },
-        )
-            .then(function (response) {
-                console.log(response);
-                asad(email)
-                if (response.status === 200)
-                    navigate("/code")
-            })
-            .catch(function (error) {
-                console.log(error, 'error');
-                if (error.response.status === 410) {
-                    alert("Already subscribed");
-                }
-            });
-    }
+    const logInUser = (e) => {
+        e.preventDefault();
+
+
+        axios.post('/api/accounts/login/', {
+            username: username,
+            password: password
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                alert(response.data.message);
+                navigate("/dashboard");
+            }
+        })
+        .catch((error) => {
+            if (error.response && error.response.status === 401) {
+                alert("Invalid credentials. Please try again.");
+            } else {
+                console.error(error);
+                alert("An error occurred. Please try again later.");
+            }
+        });
+    };
+
 
     const style_home_button = {
         textDecoration: "none",
-    }
+    };
 
     return (
         <div className="animated_body">
@@ -82,8 +74,8 @@ export default function LogIn_Page() {
                             <div className="input_box_1">
                                 <input
                                     type="text"
-                                    value={surname}
-                                    onChange={handleSurnameChange}
+                                    value={username}
+                                    onChange={handleUsernameChange}
                                     required
                                     className="input_type"
                                 />
@@ -93,8 +85,8 @@ export default function LogIn_Page() {
                             <div className="input_box_1">
                                 <input
                                     type="password"
-                                    value={email}
-                                    onChange={handleEmailChange}
+                                    value={password}
+                                    onChange={handlePasswordChange}
                                     required
                                     className="input_type"
                                 />
@@ -105,7 +97,7 @@ export default function LogIn_Page() {
                                 type="submit"
                                 className="log_in_btn"
                                 disabled={!isFormValid}
-                                onClick={signUpUser}
+                                onClick={logInUser}
                             >
                                 Најави се
                             </button>

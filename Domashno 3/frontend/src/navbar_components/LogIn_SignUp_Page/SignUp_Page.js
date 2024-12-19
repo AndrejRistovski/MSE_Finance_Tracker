@@ -10,7 +10,7 @@ import {asad} from "./Code_Page";
 export default function SignUp_Page() {
 
     const [name, setName] = useState('');
-    const [surname, setSurname] = useState('');
+    const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
 
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function SignUp_Page() {
     };
 
     const handleSurnameChange = (e) => {
-        setSurname(e.target.value);
+        setPassword(e.target.value);
         validateForm();
     };
 
@@ -33,7 +33,7 @@ export default function SignUp_Page() {
     };
 
     const validateForm = () => {
-        if (name.trim() !== '' && surname.trim() !== '' && email.trim() !== '') {
+        if (name.trim() !== '' && password.trim() !== '' && email.trim() !== '') {
             setIsFormValid(true);
         } else {
             setIsFormValid(false);
@@ -41,31 +41,32 @@ export default function SignUp_Page() {
     };
 
     const signUpUser = (e) => {
+        console.log(name, email, password);
         e.preventDefault();
-        axios.post('/subscribe', {
-                name: name,
-                surname: surname,
-                email: email
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-
-            },
-        )
+        axios.post('http://127.0.0.1:8000/api/accounts/register/', { // Update to your Django API URL
+            username: name.trim(),     // "name" should map to "username" for Django
+            email: email.trim(),       // Email address field
+            password: password.trim()   // "password" here maps to the password input
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
             .then(function (response) {
                 console.log(response);
-                asad(email)
-                if (response.status === 200)
-                    navigate("/code")
+                if (response.status === 201) {
+                    alert("User registered successfully!");
+                    navigate("/log_in"); // Redirect to login page
+                }
             })
             .catch(function (error) {
-                console.log(error, 'error');
-                if (error.response.status === 410) {
-                    alert("Already subscribed");
+                console.error(error);
+                if (error.response && error.response.status === 400) {
+                    alert("Error: " + JSON.stringify(error.response.data));
                 }
             });
-    }
+    };
+
 
     const style_home_button = {
         textDecoration: "none",
@@ -93,7 +94,7 @@ export default function SignUp_Page() {
                 <span className="bg_animate_4"></span>
                 <div className="form_box register">
                     <h2 className="h2">Регистрација</h2>
-                    <form action="#">
+                    <form onSubmit={signUpUser}>  {/* Handle form submission using onSubmit */}
                         <div className="input_box_1">
                             <input type="text" value={name} onChange={handleNameChange} required
                                    className="input_type"/>
@@ -101,19 +102,19 @@ export default function SignUp_Page() {
                             <User_ID className="log_in_user"/>
                         </div>
                         <div className="input_box_1">
-                            <input type="text" value={surname} onChange={handleSurnameChange}
+                            <input type="email" value={email} onChange={handleEmailChange}
                                    required className="input_type"/>
                             <label className="log_in_label">E-mail</label>
                             <Email className="log_in_user"/>
                         </div>
                         <div className="input_box_1">
-                            <input type="text" value={email} onChange={handleEmailChange}
+                            <input type="password" value={password} onChange={handleSurnameChange}
                                    required className="input_type"/>
                             <label className="log_in_label">Лозинка</label>
                             <Lock className="log_in_user"/>
                         </div>
-                        <button type="submit" className="log_in_btn" disabled={!isFormValid}
-                                onClick={signUpUser}>Регистрирај се
+                        <button type="submit" className="log_in_btn" disabled={!isFormValid}>
+                            Регистрирај се
                         </button>
                         <div className="log_reg_link">
                             <p className="home_link">Веќе сте корисник?
