@@ -5,7 +5,6 @@ import re
 
 
 # 1. Skrejpanje na vesti.mk
-
 def scrape_vesti_mk():
     url = "https://www.vesti.mk/category/biznis"
     response = requests.get(url)
@@ -407,6 +406,7 @@ def scrape_biznisvesti():
 
 
 def scrape_all_sites():
+
     all_data = []
     all_data.extend(scrape_vesti_mk())
     all_data.extend(scrape_grid_mk())
