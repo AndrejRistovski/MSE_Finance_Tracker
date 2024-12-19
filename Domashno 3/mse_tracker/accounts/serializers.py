@@ -11,7 +11,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['username', 'password', 'email']
         extra_kwargs = {
-            'password': {'write_only': True},  # Ensure password is not readable
+            'password': {'write_only': True},
         }
 
     def create(self, validated_data):
