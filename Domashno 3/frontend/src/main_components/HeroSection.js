@@ -3,6 +3,10 @@ import Chart from "react-apexcharts";
 import {SymbolsData} from "../stock_info/Symbols";
 import hero from "../images/images_svg/hero.svg";
 import "./HeroSection.css";
+import DailyStats from "./DailyStats";
+import DevSection from "./DevSection";
+import BlogCard from "./BlogCard";
+import BlogSection from "./BlogSection";
 
 async function fnd(option1, option2) {
     let val;
@@ -260,6 +264,9 @@ const HeroSection = () => {
                     <img className="hero-image" src={hero} alt="blockchain"/>
                 </div>
             </div>
+            <DailyStats/>
+            <DevSection/>
+            <BlogSection/>
         </div>
     );
 };
