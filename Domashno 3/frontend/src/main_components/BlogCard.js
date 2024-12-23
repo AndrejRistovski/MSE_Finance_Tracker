@@ -1,10 +1,31 @@
 import React from "react";
 
-const BlogCard = ({title, description, imgUrl}) => {
+// Function to return sentiment text
+const getSentimentPhrase = (index) => {
+    if (index === 1) return "Positive";
+    if (index === 0) return "Neutral";
+    if (index === -1) return "Negative";
+    return "";
+};
+
+const BlogCard = ({ title, description, imgUrl, sentimentIndex }) => {
     return (
         <div className="img-card-container">
+            {/* Sentiment badge in the top-right corner */}
+            <span
+                className={`sentiment-badge ${
+                    sentimentIndex === 1
+                        ? "positive"
+                        : sentimentIndex === 0
+                        ? "neutral"
+                        : "negative"
+                }`}
+            >
+                {getSentimentPhrase(sentimentIndex)}
+            </span>
+
             <div className="img-wrapper">
-                <img className="card-image" src={imgUrl} alt="blog"/>
+                <img className="card-image" src={imgUrl} alt="blog" />
             </div>
             <div className="img-card-overlay">
                 <div className="img-card-overlay-text">
@@ -18,5 +39,6 @@ const BlogCard = ({title, description, imgUrl}) => {
         </div>
     );
 };
+
 
 export default BlogCard;

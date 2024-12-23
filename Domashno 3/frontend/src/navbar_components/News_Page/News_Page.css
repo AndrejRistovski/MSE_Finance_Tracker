@@ -2,12 +2,16 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
-    background: linear-gradient(to right, #0f0f1e, #121212);
+    background: linear-gradient(145deg, #101010, #1a1a1a);
 }
 
 .news-header {
     text-align: center;
     margin-bottom: 2rem;
+}
+
+.news-footer {
+    margin-top: 2rem;
 }
 
 .news-header h1 {
@@ -33,7 +37,7 @@
 .main-article {
     display: flex;
     gap: 1.5rem;
-    background: linear-gradient(135deg, #1a1a2e, #21212e);
+    background: linear-gradient(150deg, #121212 50%, #1a1a1a 50%);
     padding: 2rem;
     border-radius: 16px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9);
@@ -42,6 +46,7 @@
     transition: transform 0.3s, box-shadow 0.3s;
     overflow: hidden;
     width: 100%;
+    position: relative;
 }
 
 .main-article:hover {
@@ -86,7 +91,7 @@
 }
 
 .right-sidebar {
-    background: linear-gradient(135deg, #1a1a2e, #21212e);
+    background: linear-gradient(150deg, #121212 50%, #1a1a1a 50%);
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
@@ -111,6 +116,9 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 1.5rem;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
 }
 
 .sidebar-news-image {
@@ -118,11 +126,13 @@
     height: 60px;
     border-radius: 8px;
     object-fit: cover;
+    margin-right: 10px;
 }
 
 .sidebar-news-text h4 {
-    font-size: 1rem;
-    color: #ffffff;
+    font-size: 0.9rem;
+    margin: 0;
+    color: #fff;
 }
 
 .article-date {
@@ -136,7 +146,7 @@
     max-width: 100%;
     margin: 0 auto;
     padding: 2rem 2rem;
-    background: linear-gradient(to right, #0f0f1e, #121212);
+    background: linear-gradient(145deg, #101010, #1a1a1a);
 }
 
 .news-layout {
@@ -149,4 +159,10 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+}
+
+.sidebar-news-text p {
+    font-size: 0.8rem;
+    color: #ccc;
+    margin: 5px 0 0;
 }
