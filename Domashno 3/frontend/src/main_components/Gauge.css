@@ -1,0 +1,107 @@
+.gauge-wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #1b1b1b;
+    border-radius: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.gauge-legend,
+.gauge-trends {
+    width: 25%;
+    color: #ffffff;
+    text-align: left;
+}
+
+.gauge-legend h3,
+.gauge-trends h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+.gauge-legend ul,
+.gauge-trends ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.gauge-legend li {
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.gauge-container {
+    width: 50%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #1e1f24, #292b33);
+    border-radius: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5), -5px -5px 15px rgba(50, 50, 50, 0.2);
+    padding: 30px;
+    margin: 0 auto;
+}
+
+.gauge-container .value-text {
+    margin-top: 20px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.gauge-container input[type="number"] {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+    width: 100px;
+    margin-top: 10px;
+    background: #2e2e2e;
+    color: #ffffff;
+}
+
+.gauge-container .arc-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.arc-labels span {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.gauge-container .arc-labels span:nth-child(1) {
+    color: #ff3300;
+}
+
+.gauge-container .arc-labels span:nth-child(2) {
+    color: #ff6600;
+}
+
+.gauge-container .arc-labels span:nth-child(3) {
+    color: #ffcc00;
+}
+
+.gauge-container .arc-labels span:nth-child(4) {
+    color: #ccff33;
+}
+
+.gauge-container .arc-labels span:nth-child(5) {
+    color: #00cc00;
+}
