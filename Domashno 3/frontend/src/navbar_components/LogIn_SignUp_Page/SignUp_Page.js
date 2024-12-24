@@ -5,7 +5,6 @@ import {ReactComponent as User_ID} from "../../images/images_svg/Name_and_Surnam
 import {ReactComponent as Lock} from "../../images/images_svg/Lock.svg";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
-import {asad} from "./Code_Page";
 
 export default function SignUp_Page() {
 

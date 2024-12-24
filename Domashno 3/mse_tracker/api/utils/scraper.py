@@ -3,8 +3,6 @@ from bs4 import BeautifulSoup
 import json
 import re
 
-
-# 1. Skrejpanje na vesti.mk
 def scrape_vesti_mk():
     url = "https://www.vesti.mk/category/biznis"
     response = requests.get(url)
@@ -30,7 +28,6 @@ def scrape_vesti_mk():
             date_match = re.search(r"\d{2}/\d{2}/\d{4}", text)
             date = date_match.group(0) if date_match else None
 
-            # PROBLEM SO SLIKITE NE SE VADAT NESTO SO BASE64 FORMAT
 
             img_tag = article.find("div").find("img")
             if img_tag and img_tag.has_attr("src"):
@@ -55,8 +52,6 @@ def scrape_vesti_mk():
     return data
 
 
-# 2. Scraping grid.mk
-
 def scrape_grid_mk():
     url = "https://grid.mk/biznis"
     response = requests.get(url)
@@ -68,11 +63,9 @@ def scrape_grid_mk():
     data = []
     for article in articles:
         try:
-            # Naslov
             headline_tag = article.find("h2", class_="post-title")
             headline = headline_tag.text.strip() if headline_tag else None
 
-            # I teksto e dinamicki treba so Selenium
             hidden_div_tag = article.find("div", class_="hidden")
             if hidden_div_tag:
                 text_tag = hidden_div_tag.find("p", class_="post-text")
@@ -80,11 +73,9 @@ def scrape_grid_mk():
             else:
                 text = None
 
-            # Slika URL
             img_tag = article.find("img", class_="post-image")
             img_url = img_tag["src"] if img_tag and img_tag.has_attr("src") else None
 
-            # Problem datata se naogja koa so otvore article, treba na drug nacin da se iskrejpa
             date_tag = article.find("span", class_="time")
             date = date_tag.text.strip() if date_tag else None
 
@@ -102,8 +93,6 @@ def scrape_grid_mk():
     return data
 
 
-
-# 3. Scraping investnorthmacedonia.gov.mk
 def scrape_investnorthmacedonia():
     url = "https://investnorthmacedonia.gov.mk/mk/archive/biznis-vesti/"
 
@@ -150,10 +139,9 @@ def scrape_investnorthmacedonia():
             print(f"Error processing an article: {e}")
             continue
 
-    return data #Ne se vlecat pogledi go sajto
+    return data
 
 
-# 4. Scraping biznisinfo.mk
 def scrape_biznisinfo_mk():
     url = "https://biznisinfo.mk/kategorija/biznis-vesti/makedonija/"
     response = requests.get(url)
@@ -186,8 +174,6 @@ def scrape_biznisinfo_mk():
             continue
 
     return data
-
-
 
 def scrape_daily_mk():
     url = "https://daily.mk/ekonomija/latest"
@@ -241,84 +227,6 @@ def scrape_daily_mk():
 
     return data
 
-
-
-
-# 6. Scraping time.mk
-# def scrape_time_mk():
-#     url = "https://time.mk/s/biznisvesti/1"
-#     response = requests.get(url)
-#     soup = BeautifulSoup(response.text, "html.parser")
-#     articles = soup.find_all("article")
-#
-#     data = []
-#     for article in articles:
-#         try:
-#             headline_tag = article.find("h2", class_="entry-title")
-#             headline = headline_tag.text.strip() if headline_tag else None
-#
-#             text_tag = article.find("div", class_="entry-summary")
-#             text = text_tag.text.strip() if text_tag else None
-#
-#             img_tag = article.find("img")
-#             img_url = img_tag["src"] if img_tag else None
-#
-#             date_tag = article.find("time")
-#             date = date_tag.text.strip() if date_tag else None
-#
-#             data.append({
-#                 "headline": headline,
-#                 "text": text,
-#                 "image_url": img_url,
-#                 "date": date
-#             })
-#         except Exception as e:
-#             print(f"Error on time.mk: {e}")
-#             continue
-#
-#     return data nema sansi da se iskrejpa
-
-
-# 7. Scraping plusinfo.mk
-# def scrape_plusinfo_mk():
-#     url = "https://plusinfo.mk/category/biznis/"
-#     response = requests.get(url)
-#     soup = BeautifulSoup(response.text, "html.parser")
-#     articles = soup.find_all("article")
-#
-#     data = []
-#     for article in articles:
-#         try:
-#             headline_tag = article.find("h2", class_="entry-title")
-#             headline = headline_tag.text.strip() if headline_tag else None
-#
-#             text_tag = article.find("div", class_="entry-summary")
-#             text = text_tag.text.strip() if text_tag else None
-#
-#             img_tag = article.find("img")
-#             img_url = img_tag["src"] if img_tag else None
-#
-#             date_tag = article.find("time")
-#             date = date_tag.text.strip() if date_tag else None
-#
-#             data.append({
-#                 "headline": headline,
-#                 "text": text,
-#                 "image_url": img_url,
-#                 "date": date
-#             })
-#         except Exception as e:
-#             print(f"Error on plusinfo.mk: {e}")
-#             continue
-#
-#     return data
-
-
-# 8. Scraping centar.mk
-import requests
-from bs4 import BeautifulSoup
-import re
-
 def scrape_centar_mk():
     url = "https://centar.mk/blog/category/biznis/"
     response = requests.get(url)
@@ -328,14 +236,11 @@ def scrape_centar_mk():
     data = []
     for article in articles:
         try:
-
             headline_tag = article.find("h2", class_="entry-title")
             headline = headline_tag.text.strip() if headline_tag else None
 
-
             text_tag = article.find("div", class_="entry-content")
             text = text_tag.text.strip() if text_tag else None
-
 
             img_tag = article.find("a", class_="penci-link-post penci-image-holder penci-lazy")
             if img_tag:
@@ -344,7 +249,6 @@ def scrape_centar_mk():
                 img_url = match.group(1) if match else None
             else:
                 img_url = None
-
 
             date_tag = article.find("time")
             date = date_tag.text.strip() if date_tag else None
@@ -374,23 +278,18 @@ def scrape_biznisvesti():
     scraped_data = []
     for article in articles:
         try:
-            # Vadenje naslov
             headline_tag = article.find("h2", class_="post-box-title")
             headline = headline_tag.text.strip() if headline_tag else None
 
-            # Vadenje tekst
             text_tag = article.find("div", class_="entry")
             text = text_tag.text.strip() if text_tag else None
 
-            # Vadenje slika URL
             img_tag = article.find("img")
             img_url = img_tag["src"] if img_tag else None
 
-            # Vadenje datum
             date_tag = article.find("span", class_="tie-date")
             date = date_tag.text.strip() if date_tag else None
 
-            # Dodavanje u lista
             scraped_data.append({
                 "headline": headline,
                 "text": text,
@@ -400,7 +299,6 @@ def scrape_biznisvesti():
         except AttributeError:
             continue
 
-    # JSON konverzija
     return scraped_data
 
 
@@ -413,8 +311,6 @@ def scrape_all_sites():
     all_data.extend(scrape_investnorthmacedonia())
     all_data.extend(scrape_biznisinfo_mk())
     all_data.extend(scrape_daily_mk())
-    #all_data.extend(scrape_time_mk())
-    #all_data.extend(scrape_plusinfo_mk()) ;
     all_data.extend(scrape_centar_mk())
     all_data.extend(scrape_biznisvesti())
 
