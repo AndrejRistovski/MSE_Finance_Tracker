@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
     <data-source source="LOCAL" name="final_stock_data" uuid="5764eb33-5d29-404d-b691-27ade5b62fc7">
-      <driver-ref>sqlite.xerial</driver-ref>
+      <driver-ref>bcf7abaf-5e64-4735-8f37-c76c3c60da4d</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Users\baze\PycharmProjects\MSE_Finance_Tracker\Domashno 1\databases\final_stock_data.db</jdbc-url>
@@ -17,7 +17,7 @@
       </libraries>
     </data-source>
     <data-source source="LOCAL" name="final_stock_data [2]" uuid="49cb7150-d31d-4415-aa5e-566635201b45">
-      <driver-ref>sqlite.xerial</driver-ref>
+      <driver-ref>bcf7abaf-5e64-4735-8f37-c76c3c60da4d</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Users\baze\PycharmProjects\MSE_Finance_Tracker\Domashno 3\mse_tracker\databases\final_stock_data.db</jdbc-url>
@@ -32,7 +32,7 @@
       </libraries>
     </data-source>
     <data-source source="LOCAL" name="db" uuid="df974138-958e-42d5-be69-6c032c497dc7">
-      <driver-ref>sqlite.xerial</driver-ref>
+      <driver-ref>7a8c4970-cc7a-4817-8958-2412bd22a69f</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Users\nikol\PycharmProjects\dians\MSE_Finance_Tracker\Domashno 3\mse_tracker\db.sqlite3</jdbc-url>

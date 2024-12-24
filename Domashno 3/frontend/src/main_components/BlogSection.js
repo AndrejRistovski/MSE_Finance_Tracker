@@ -25,18 +25,6 @@ const BlogSection = () => {
                 "Сазнајте зошто обврзниците се популарна опција за конзервативни инвеститори и како можат да донесат стабилни приходи и сигурност.",
             imgUrl: blockchain3,
         },
-        {
-            title: "Кои се најликвидните акции во Македонија?",
-            description:
-                "Истражете кои компании на Македонската берза се најактивни во тргувањето и како тоа влијае на нивната атрактивност за инвеститорите.",
-            imgUrl: blockchain1,
-        },
-        {
-            title: "Што треба да знаете пред да тргувате со акции?",
-            description:
-                "Основни совети за почетниците кои сакаат да започнат со инвестирање на Македонската берза, вклучувајќи како да направите истражување и анализа.",
-            imgUrl: blockchain2,
-        },
     ];
     return (
         <div className="blog-section-container">
@@ -47,15 +35,23 @@ const BlogSection = () => {
             </div>
             <div className="blogs-container">
                 {blogs.map((blog, index) => {
+                    const sentimentIndexes = [1, 0, -1, 0, 1];
                     return (
                         <BlogCard
                             key={index}
                             title={blog.title}
                             description={blog.description}
                             imgUrl={blog.imgUrl}
+                            sentimentIndex={sentimentIndexes[index]}
                         />
                     );
                 })}
+            </div>
+            <div className="advise">
+                Според анализите за горнонаведените вести ние предвидуваме дека `акцијата` ќе `расте/опаѓа`
+                <div>
+                    Совет: `купи/продај`
+                </div>
             </div>
         </div>
     );
