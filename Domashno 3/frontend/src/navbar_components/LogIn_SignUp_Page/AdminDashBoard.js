@@ -2,7 +2,6 @@ import React, {useRef} from 'react';
 import './AdminDashBoard.css';
 import Slideshow from './SlideShow';
 import SelectedStocks from './SelectedStocks';
-import ChatBot from './ChatBot';
 import {Link} from 'react-router-dom';
 import {
     Chart as ChartJS,
@@ -101,7 +100,6 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             </div>
-            <ChatBot/>
         </div>
     );
 };
