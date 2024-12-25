@@ -43,16 +43,16 @@ export default function LogIn_Page() {
         })
         .then((response) => {
             if (response.status === 200) {
-                alert(response.data.message);
+                console.log(response.data.message);
                 navigate("/dashboard");
             }
         })
         .catch((error) => {
             if (error.response && error.response.status === 401) {
-                alert("Invalid credentials. Please try again.");
+                console.log("Invalid credentials. Please try again.");
             } else {
                 console.error(error);
-                alert("An error occurred. Please try again later.");
+                console.log("An error occurred. Please try again later.");
             }
         });
     };
