@@ -23,7 +23,7 @@ def fetch_issuers():
             issuer_code = option['value']
             if not any(char.isdigit() for char in issuer_code):  # Не се земаат кодовите со цифри во нив затоа што тоа се обврзници
                 issuers.append(issuer_code)
-                cursor.execute("INSERT OR IGNORE INTO tickers (ID) VALUES (?)", (issuer_code,))
+                cursor.execute("INSERT INTO tickers (ID) VALUES (?)", (issuer_code,))
         connection.commit()
         connection.close()
     return issuers

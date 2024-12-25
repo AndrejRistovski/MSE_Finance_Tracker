@@ -23,3 +23,29 @@ finance-tracker.mk е иновативен вебсајт дизајниран �
 - [Домашно 1](https://github.com/AndrejRistovski/MSE_Finance_Tracker/tree/main/Domashno%201)
 - [Домашно 2](https://github.com/AndrejRistovski/MSE_Finance_Tracker/tree/main/Domashno%202)
 - [Домашно 3](https://github.com/AndrejRistovski/MSE_Finance_Tracker/tree/main/Domashno%203)
+
+---
+
+## Инсталирање на зависности
+Се инсталираат зависностите за Python:
+```commandline
+pip install requirements.txt
+```
+
+Се инсталираат зависностите за React:
+
+```commandline
+cd '.\Domashno 3\frontend'
+npm install
+```
+
+## Стартување на проектот
+```commandline
+cd '.\Domashno 3\mse_tracker'
+python manage.py runserver
+```
+
+```commandline
+cd '.\Domashno 3\frontend'
+npm start
+```

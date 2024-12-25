@@ -54,14 +54,14 @@ export default function SignUp_Page() {
             .then(function (response) {
                 console.log(response);
                 if (response.status === 201) {
-                    console.log("User registered successfully!");
+                    alert("User registered successfully!");
                     navigate("/log_in"); // Redirect to login page
                 }
             })
             .catch(function (error) {
                 console.error(error);
                 if (error.response && error.response.status === 400) {
-                    console.log("Error: " + JSON.stringify(error.response.data));
+                    alert("Error: " + JSON.stringify(error.response.data));
                 }
             });
     };

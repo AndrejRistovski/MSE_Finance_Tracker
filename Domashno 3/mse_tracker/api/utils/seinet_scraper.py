@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import requests
 import html
@@ -7,85 +8,61 @@ from io import BytesIO
 from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import Process
 from html.parser import HTMLParser
-from transformers import pipeline
 
 parser = HTMLParser()
-classifier = pipeline('sentiment-analysis')
-
 
 def process_document(document):
-    try:
-        content = document.get('content', '')
-        document_id = document.get('documentId', '')
-        description = document['layout']['description']
-        content = html.unescape(content)
-        content = re.sub(r'<[^>]*>', '', content)
-        published_date = document['publishedDate'].split("T")[0]
-        issuer_code = document['issuer']['code']
-        display_name = document['issuer']['localizedTerms'][0]['displayName']
+    content = document.get('content', '')
+    document_id = document.get('documentId', '')
+    description = document['layout']['description']
+    content = html.unescape(content)
+    content = re.sub(r'<[^>]*>', '', content)
+    published_date = document['publishedDate'].split("T")[0]
+    issuer_code = document['issuer']['code']
+    display_name = document['issuer']['localizedTerms'][0]['displayName']
 
-        if 'this is automaticaly generated document'.lower() in content.lower():
-            return
+    if 'this is automaticaly generated document'.lower() in content.lower():
+        return
 
-        text = ""
-        attachments = document.get('attachments', [])
-        if attachments:
-            attachment_id = attachments[0].get('attachmentId')
-            file_name = attachments[0].get('fileName')
+    text = ""
+    attachments = document.get('attachments', [])
+    if attachments:
+        attachment_id = attachments[0].get('attachmentId')
+        file_name = attachments[0].get('fileName')
 
-            if file_name.lower().endswith('.pdf'):
-                attachment_url = f"https://api.seinet.com.mk/public/documents/attachment/{attachment_id}"
-                response = requests.get(attachment_url)
-                if response.status_code == 200:
-                    pdf_file = BytesIO(response.content)
-                    with pdfplumber.open(pdf_file) as pdf:
-                        for page in pdf.pages:
-                            text += page.extract_text()
-                content += "\n"
-                content += text
+        if file_name.lower().endswith('.pdf'):
+            attachment_url = f"https://api.seinet.com.mk/public/documents/attachment/{attachment_id}"
+            response = requests.get(attachment_url)
+            if response.status_code == 200:
+                pdf_file = BytesIO(response.content)
+                with pdfplumber.open(pdf_file) as pdf:
+                    for page in pdf.pages:
+                        text += page.extract_text()
+            content += "\n"
+            content += text
 
-        # Ensure there's text to classify
-        if not content.strip():
-            print(f"Empty text for document {document_id}, skipping sentiment analysis.")
-            return
+    connection = sqlite3.connect("../../databases/final_stock_data.db")
+    cursor = connection.cursor()
 
-        # Sentiment analysis
+    cursor.execute("SELECT 1 FROM news WHERE document_id = ?", (document_id,))
+    existing_entry = cursor.fetchone()
+
+    if not existing_entry:
         try:
-            classification = classifier(content[:500])[0]
-            print(f"Model output: {classification}")
-            sentiment = classification.get('label', 'Unknown')  # Use 'label' as the key
-            probability = classification.get('score', 0.0)
+            cursor.execute(
+                """
+                INSERT INTO news (document_id, date, description, content, company_code, company_name)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (document_id, published_date, description, content, issuer_code, display_name)
+            )
+            connection.commit()
         except Exception as e:
-            print(f"Error during sentiment classification for document {document_id}: {e}")
-            return
+            print(e)
+    else:
+        print(f"Entry Exists: {existing_entry}")
 
-        # Database insert
-        connection = sqlite3.connect("../../databases/final_stock_data.db")
-        cursor = connection.cursor()
-
-        cursor.execute("SELECT 1 FROM news WHERE document_id = ?", (document_id,))
-        existing_entry = cursor.fetchone()
-
-        if not existing_entry:
-            try:
-                cursor.execute(
-                    """
-                    INSERT INTO news (document_id, date, description, content, company_code, company_name, sentiment, probability)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                    """,
-                    (document_id, published_date, description, content, issuer_code, display_name, sentiment,
-                     probability)
-                )
-                connection.commit()
-                print("Inserted new entry into database")
-            except Exception as e:
-                print(f"Error inserting document into database for {document_id}: {e}")
-        else:
-            print(f"Entry Exists: {existing_entry}")
-
-        connection.close()
-    except Exception as e:
-        print(f"Error processing document {document_id}: {e}")
+    connection.close()
 
 
 def process_page(page):
@@ -113,7 +90,6 @@ def process_page(page):
 def fetch_pages_worker(pages_subset):
     for page in pages_subset:
         process_page(page)
-
 
 def fetch():
     processes = []
