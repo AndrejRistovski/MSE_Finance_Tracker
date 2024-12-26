@@ -1,0 +1,271 @@
+.admin-dashboard {
+    font-family: 'Arial', sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.admin-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1e1e1e;
+    border-bottom: 2px solid #00d4ff;
+}
+
+.admin-navbar-title {
+    font-size: 1.5rem;
+    color: #00d4ff;
+}
+
+.admin-navbar-links a {
+    color: #e0e0e0;
+    margin-left: 15px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.admin-navbar-links a:hover {
+    color: #00d4ff;
+}
+
+.dashboard-header {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.dashboard-card, .dashboard-card-news{
+    flex: 1;
+    background-color: #1e1e1e;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    min-width: 280px;
+}
+.dashboard-card-news{
+    height: 100%;
+    background: transparent;
+    box-shadow: none;
+}
+
+.dashboard-card h3 {
+    color: #00d4ff;
+    margin-bottom: 10px;
+}
+
+.dashboard-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.dashboard-card li {
+    margin: 5px 0;
+}
+
+.chart-container {
+    flex: 1;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+}
+.log_out_btn{
+    background-color: #00d4ff;
+    border: none;
+    color: white;
+    padding: 7px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 10px;
+}
+.advise {
+    color: #00b7ff;
+    font-size: 1rem;
+    max-width: 800px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto; /* Centers the text horizontally */
+    margin-top: 20px; /* Adds space between the chart and the text */
+    padding: 10px; /* Optional: Adds some padding for better spacing */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.stock-table-section {
+  background-color: #1b1b1b;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+  margin-top: 20px;
+  text-align: center;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #e0e0e0;
+}
+
+.stock-table th,
+.stock-table td {
+  padding: 10px 15px;
+  text-align: center;
+  border-bottom: 1px solid #333333;
+}
+
+.stock-table th {
+  background-color: #121212;
+  font-weight: bold;
+  color: #00d4ff;
+}
+
+.stock-table tr:hover {
+  background-color: #333333;
+}
+
+.stock-table td {
+  color: #ffffff;
+}
+
+.stock-table td:nth-child(4) {
+  font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+/* Profile Section */
+.admin-navbar-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #00bfff; /* Optional border */
+}
+
+.profile-name {
+    color: #00bfff;
+    font-weight: bold;
+}
+
+.profile-dropdown {
+    position: relative;
+}
+
+.profile-menu-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #fff;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 2.5rem;
+    right: 0;
+    background-color: #222;
+    border: 1px solid #555;
+    border-radius: 5px;
+    list-style: none;
+    padding: 0.5rem;
+    display: none;
+}
+
+.dropdown-menu li {
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.dropdown-menu li:hover {
+    background-color: #333;
+}
+
+.profile-container:hover .dropdown-menu {
+    display: block;
+}
+
+/* Activity Stats Panel */
+.activity-stats-panel {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #222;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.activity-stats-panel h3 {
+    color: #00bfff;
+    margin-bottom: 1rem;
+}
+
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activity-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #444;
+    color: #ccc;
+}
+
+.activity-list li:last-child {
+    border-bottom: none;
+}
+

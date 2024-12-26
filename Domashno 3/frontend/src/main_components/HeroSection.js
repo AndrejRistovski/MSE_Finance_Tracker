@@ -1,8 +1,13 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Chart from "react-apexcharts";
 import {SymbolsData} from "../stock_info/Symbols";
 import hero from "../images/images_svg/hero.svg";
 import "./HeroSection.css";
+import DailyStats from "./DailyStats";
+import DevSection from "./DevSection";
+import BlogCard from "./BlogCard";
+import BlogSection from "./BlogSection";
+import Gauge from "./Gauge";
 
 async function fnd(option1, option2) {
     let val;
@@ -16,10 +21,24 @@ async function fnd(option1, option2) {
     return val;
 }
 
+async function gagueUpdate(option1, option2) {
+    let val;
+
+    await fetch(`api/technical_analysis/${option1}/${option2}`)
+        .then((res) => res.text())
+        .then((text) => {
+            val = JSON.parse(text);
+        });
+
+    return val;
+
+}
+
 const HeroSection = () => {
     const [key, setKey] = useState(0);
     const [selectedOption1, setSelectedOption1] = useState(""); // For crypto selection
     const [selectedOption2, setSelectedOption2] = useState("1 Year"); // Default to "1 Year"
+    const [gagueValue, setGagueValue] = useState(0);
     const [state, setState] = useState({
         options: {
             chart: {
@@ -189,7 +208,7 @@ const HeroSection = () => {
         const fetchData = async () => {
             const data = await fnd(randomCrypto, "y");
             updateState(data);
-            // updateState(data);
+            // updateState(data); gague
             setKey((key) => key + 1);
         };
 
@@ -206,53 +225,61 @@ const HeroSection = () => {
 
     const handleSaveClick = async () => {
         const prom = await fnd(selectedOption1, selectedOption2);
+        const gague = await gagueUpdate(selectedOption1, selectedOption2);
         updateState(prom);
+        // updateGague(gague);
         setKey((key) => key + 1);
     };
 
+    const chartGaugeRef = useRef(null);
+
+    const handleScrollToChartGauge = () => {
+        chartGaugeRef.current.scrollIntoView({behavior: "smooth"});
+    };
     return (
         <div className="home">
+            <div className="animated_box">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
             <div className="hero-section-container">
                 <div className="hero-info-wrapper">
                     <div className="hero-info-text">
-                        <h1 className="main-heading">Welcome To Finance-Tracker Macedonia</h1>
-                        <h2 className="main-heading-1">The Future of Stock&Crypto</h2>
-                        <div className="chart_container">
-                            <div className="chart_header">
-                                <select
-                                    className="crypto_dropdown"
-                                    value={selectedOption1}
-                                    onChange={handleOption1Change}
-                                >
-                                    <option value="">Choose a cryptocurrency</option>
-                                    {SymbolsData.map((crypto_sym) => (
-                                        <option key={crypto_sym} value={crypto_sym}>
-                                            {crypto_sym}
-                                        </option>
-                                    ))}
-                                </select>
-                                <select
-                                    className="crypto_dropdown"
-                                    value={selectedOption2}
-                                    onChange={handleOption2Change}
-                                >
-                                    <option value="at">All time</option>
-                                    <option value="y">1 Year</option>
-                                    <option value="m">1 Month</option>
-                                    <option value="w">1 Week</option>
-                                </select>
-                                <button className="crypto_button" onClick={handleSaveClick}>
-                                    Save
-                                </button>
-                            </div>
-                            <Chart
-                                key={key}
-                                options={state.options}
-                                series={state.series}
-                                type="area"
-                                width="100%"
-                                height="350"
-                            />
+                        <h1 className="main-heading">Добредојдовте на Finance-Tracker Македонија</h1>
+                        <h2 className="main-heading-1">Иднината на акциите и криптовалутите</h2>
+                        <div className="features-section-container">
+                            <h2 className="features-heading">Клучни Карактеристики:</h2>
+                            <ul className="features-list">
+                                <li><strong>Реални Временски Податоци:</strong> Останете информирани со
+                                    најновите цени на акции и криптовалути за да ги искористите сите можности.
+                                </li>
+                                <li><strong>Напредни Аналитики:</strong> Искористете ги најсовремените графикони, тренд
+                                    анализи и индикатори за да ги предвидите пазарните движења.
+                                </li>
+                                <li><strong>Фокус на Македонскиот Пазар:</strong> Пристапете до ексклузивни информации и
+                                    извештаи прилагодени за инвеститорите на Македонската берза.
+                                </li>
+                                <li><strong>Брз и Лесен Пристап:</strong> Безпрекорно истражувајте ги пазарните трендови
+                                    на десктоп или мобилен уред.
+                                </li>
+                                <li><strong>Персонализирани Табли:</strong> Прилагодете го вашето искуство со алатки кои
+                                    ви овозможуваат да ги следите само најважните информации.
+                                </li>
+                                <li><strong>Интеграција на Најнови Вести:</strong> Бидете во тек со курирани вести и
+                                    ажурирања директно од доверливи финансиски извори.
+                                </li>
+                            </ul>
+                            <button className="get-started-btn" onClick={handleScrollToChartGauge}>Започнете Сега
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -260,6 +287,49 @@ const HeroSection = () => {
                     <img className="hero-image" src={hero} alt="blockchain"/>
                 </div>
             </div>
+            <div ref={chartGaugeRef} className="chart-gauge-container">
+                <div className="chart_container">
+                    <div className="chart_header">
+                        <select
+                            className="crypto_dropdown"
+                            value={selectedOption1}
+                            onChange={handleOption1Change}
+                        >
+                            <option value="">Изберете тикер</option>
+                            {SymbolsData.map((crypto_sym) => (
+                                <option key={crypto_sym} value={crypto_sym}>
+                                    {crypto_sym}
+                                </option>
+                            ))}
+                        </select>
+                        <select
+                            className="crypto_dropdown"
+                            value={selectedOption2}
+                            onChange={handleOption2Change}
+                        >
+                            <option value="at">All time</option>
+                            <option value="y">1 Year</option>
+                            <option value="m">1 Month</option>
+                            <option value="w">1 Week</option>
+                        </select>
+                        <button className="crypto_button" onClick={handleSaveClick}>
+                            Save
+                        </button>
+                    </div>
+                    <Chart
+                        key={key}
+                        options={state.options}
+                        series={state.series}
+                        type="area"
+                        width="100%"
+                        height="350"
+                    />
+                </div>
+                <Gauge value={gagueValue}/>
+            </div>
+            <BlogSection/>
+            <DailyStats/>
+            <DevSection/>
         </div>
     );
 };
