@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Chart from "react-apexcharts";
-import {SymbolsData} from "../stock_info/Symbols";
+import { SymbolsData } from "../stock_info/Symbols";
 import hero from "../images/images_svg/hero.svg";
 import "./HeroSection.css";
 import DailyStats from "./DailyStats";
@@ -8,37 +8,33 @@ import DevSection from "./DevSection";
 import BlogCard from "./BlogCard";
 import BlogSection from "./BlogSection";
 import Gauge from "./Gauge";
+import StyledRadialGauge from './Gauge';
 
 async function fnd(option1, option2) {
     let val;
-
     await fetch(`api/price/${option1}/${option2}`)
         .then((res) => res.text())
         .then((text) => {
             val = JSON.parse(text);
         });
-
     return val;
 }
 
 async function gagueUpdate(option1, option2) {
     let val;
-
     await fetch(`api/technical_analysis/${option1}/${option2}`)
         .then((res) => res.text())
         .then((text) => {
             val = JSON.parse(text);
         });
-
     return val;
-
 }
 
 const HeroSection = () => {
     const [key, setKey] = useState(0);
-    const [selectedOption1, setSelectedOption1] = useState(""); // For crypto selection
-    const [selectedOption2, setSelectedOption2] = useState("1 Year"); // Default to "1 Year"
-    const [gagueValue, setGagueValue] = useState(0);
+    const [selectedOption1, setSelectedOption1] = useState("");
+    const [selectedOption2, setSelectedOption2] = useState("1 Year");
+    const [gagueValue, setGaugeValue] = useState(0);
     const [state, setState] = useState({
         options: {
             chart: {
@@ -130,7 +126,7 @@ const HeroSection = () => {
                     formatter: (value) => `$${value}`,
                 },
                 x: {
-                    formatter: (value) => `Date: ${value}`, // Customize as needed
+                    formatter: (value) => `Date: ${value}`,
                 },
             },
         },
@@ -143,7 +139,7 @@ const HeroSection = () => {
     });
 
     const updateState = (CryptoDataVal) => {
-        const newState = {...state};
+        const newState = { ...state };
 
         const validData = CryptoDataVal.filter(obj => obj.close !== undefined && obj.close !== null && !isNaN(obj.close) && obj.time !== undefined);
 
@@ -152,10 +148,10 @@ const HeroSection = () => {
             return; // Early return if no valid data
         }
 
-        // Set the series data
+
         newState.series[0].data = validData.map((obj) => parseFloat(obj.close));
 
-        // Store date strings for tooltip use
+
         const formattedDates = validData.map((obj) => {
             const dateObject = new Date(obj.time * 1000); // Convert timestamp to milliseconds
             return dateObject.toLocaleDateString(undefined, {
@@ -165,50 +161,27 @@ const HeroSection = () => {
             });
         });
 
-        // Log the series data and formatted dates
-        console.log("Series Data:", newState.series[0].data);
-        console.log("Formatted Dates:", formattedDates);
-
         newState.options.xaxis.categories = validData.map((obj) => obj.time);
-
-        // Ensure x-axis categories are set correctly
-        newState.options.xaxis.labels = {
-            show: false,
+        newState.options.tooltip.x.formatter = (value, { dataPointIndex }) => {
+            return `Date: ${formattedDates[dataPointIndex]}`;
         };
-
-        // Update tooltip configuration
-        newState.options.tooltip = {
-            theme: "dark",
-            style: {
-                fontSize: '0.9rem',
-            },
-            x: {
-                formatter: (value, {dataPointIndex}) => {
-                    return `Date: ${formattedDates[dataPointIndex]}`;
-                },
-            },
-            y: {
-                formatter: (value) => `${value} мкд.`,
-            },
-        };
-
-        // Log the final state before setting it
-        console.log("Final Chart State:", newState);
 
         setState(newState);
     };
 
 
-    // Fetch data for a random coin and 1 Year on page load
     useEffect(() => {
         const randomCrypto = SymbolsData[Math.floor(Math.random() * SymbolsData.length)];
         setSelectedOption1(randomCrypto);
 
-        // Fetch data
         const fetchData = async () => {
             const data = await fnd(randomCrypto, "y");
             updateState(data);
-            // updateState(data); gague
+
+            const gague = await gagueUpdate(randomCrypto, "y");
+            const roundedRsi = Math.round(gague[0].rsi);
+            setGaugeValue(roundedRsi); // Update the gauge value
+
             setKey((key) => key + 1);
         };
 
@@ -226,31 +199,20 @@ const HeroSection = () => {
     const handleSaveClick = async () => {
         const prom = await fnd(selectedOption1, selectedOption2);
         const gague = await gagueUpdate(selectedOption1, selectedOption2);
+        const roundedRsi = Math.round(gague[0].rsi);
+        setGaugeValue(roundedRsi);
+
         updateState(prom);
-        // updateGague(gague);
         setKey((key) => key + 1);
     };
 
     const chartGaugeRef = useRef(null);
-
     const handleScrollToChartGauge = () => {
-        chartGaugeRef.current.scrollIntoView({behavior: "smooth"});
+        chartGaugeRef.current.scrollIntoView({ behavior: "smooth" });
     };
+
     return (
         <div className="home">
-            <div className="animated_box">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
             <div className="hero-section-container">
                 <div className="hero-info-wrapper">
                     <div className="hero-info-text">
@@ -278,13 +240,12 @@ const HeroSection = () => {
                                     ажурирања директно од доверливи финансиски извори.
                                 </li>
                             </ul>
-                            <button className="get-started-btn" onClick={handleScrollToChartGauge}>Започнете Сега
-                            </button>
+                            <button className="get-started-btn" onClick={handleScrollToChartGauge}>Започнете Сега</button>
                         </div>
                     </div>
                 </div>
                 <div className="hero-image-container">
-                    <img className="hero-image" src={hero} alt="blockchain"/>
+                    <img className="hero-image" src={hero} alt="blockchain" />
                 </div>
             </div>
             <div ref={chartGaugeRef} className="chart-gauge-container">
@@ -325,15 +286,18 @@ const HeroSection = () => {
                         height="350"
                     />
                 </div>
-                <Gauge value={gagueValue}/>
+
+                <StyledRadialGauge
+                    gaugeValue={gagueValue}
+                    setGaugeValue={setGaugeValue}
+                />
             </div>
-            <BlogSection/>
-            <DailyStats/>
-            <DevSection/>
+            <BlogSection />
+            <DailyStats />
+            <DevSection />
         </div>
     );
 };
 
 export default HeroSection;
-
 
