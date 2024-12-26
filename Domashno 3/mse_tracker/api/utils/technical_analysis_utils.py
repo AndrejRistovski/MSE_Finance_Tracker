@@ -22,10 +22,14 @@ def calculate_hma(data, window):
 
 def calculate_rsi(data, window):
     delta = data['close'].diff()
+    print("Delta:", delta.head())
     gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
+    print("Gain:", gain.head())
     loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
-    rs = gain / loss
+    print("Loss:", loss.head())
+    rs = gain / (loss + 1e-10)
     return 100 - (100 / (1 + rs))
+
 
 def calculate_stochastic(data, window):
     low_min = data['close'].rolling(window=window).min()
@@ -56,4 +60,3 @@ def calculate_ichimoku(data, window):
     conversion_line = ((data['high'].rolling(window=window).max() + data['low'].rolling(window=window).min()) / 2)
     base_line = ((data['high'].rolling(window=window).max() + data['low'].rolling(window=window).min()) / 2)
     return conversion_line, base_line
-
