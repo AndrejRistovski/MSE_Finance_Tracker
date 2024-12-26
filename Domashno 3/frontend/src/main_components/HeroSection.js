@@ -9,6 +9,9 @@ import BlogCard from "./BlogCard";
 import BlogSection from "./BlogSection";
 import Gauge from "./Gauge";
 import StyledRadialGauge from './Gauge';
+import {getCookie} from "../CRSFCheck";
+
+
 
 async function fnd(option1, option2) {
     let val;
@@ -31,6 +34,7 @@ async function gagueUpdate(option1, option2) {
 }
 
 const HeroSection = () => {
+
     const [key, setKey] = useState(0);
     const [selectedOption1, setSelectedOption1] = useState("");
     const [selectedOption2, setSelectedOption2] = useState("1 Year");

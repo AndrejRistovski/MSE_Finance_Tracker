@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "./SignUp_LogIn.css";
-import { ReactComponent as Lock } from "../../images/images_svg/Lock.svg";
-import { ReactComponent as User_ID } from "../../images/images_svg/Name_and_Surname.svg";
-import { Link, useNavigate } from "react-router-dom";
+import {ReactComponent as Lock} from "../../images/images_svg/Lock.svg";
+import {ReactComponent as User_ID} from "../../images/images_svg/Name_and_Surname.svg";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import {getCookie} from "../../CRSFCheck"
 
 export default function LogIn_Page() {
     const [username, setUsername] = useState('');
@@ -11,6 +12,10 @@ export default function LogIn_Page() {
     const [isFormValid, setIsFormValid] = useState(false);
     const navigate = useNavigate();
 
+    const csrftoken = getCookie('csrftoken');
+    if (csrftoken != null) {
+        navigate("/")
+    }
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -32,7 +37,6 @@ export default function LogIn_Page() {
     const logInUser = (e) => {
         e.preventDefault();
 
-
         axios.post('/api/accounts/login/', {
             username: username,
             password: password
@@ -41,20 +45,20 @@ export default function LogIn_Page() {
                 'Content-Type': 'application/json'
             }
         })
-        .then((response) => {
-            if (response.status === 200) {
-                console.log(response.data.message);
-                navigate("/dashboard");
-            }
-        })
-        .catch((error) => {
-            if (error.response && error.response.status === 401) {
-                console.log("Invalid credentials. Please try again.");
-            } else {
-                console.error(error);
-                console.log("An error occurred. Please try again later.");
-            }
-        });
+            .then((response) => {
+                if (response.status === 200) {
+                    console.log(response.data.message);
+                    navigate("/dashboard");
+                }
+            })
+            .catch((error) => {
+                if (error.response && error.response.status === 401) {
+                    console.log("Invalid credentials. Please try again.");
+                } else {
+                    console.error(error);
+                    console.log("An error occurred. Please try again later.");
+                }
+            });
     };
 
 
