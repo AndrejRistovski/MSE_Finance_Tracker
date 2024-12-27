@@ -42,7 +42,7 @@ export default function Navbar() {
                         {csrftoken ? (
                             <>
                                 <li>
-                                    <Link to="/dashboard" className="subscribe" role="button">
+                                    <Link to="/admin_dashboard" className="subscribe" role="button">
                                         Dashboard
                                     </Link>
                                 </li>

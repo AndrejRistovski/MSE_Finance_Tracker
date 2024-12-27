@@ -3,12 +3,9 @@ import Chart from "react-apexcharts";
 import {SymbolsData} from "../stock_info/Symbols";
 import hero from "../images/images_svg/hero.svg";
 import "./HeroSection.css";
-import DailyStats from "./DailyStats";
-import DevSection from "./DevSection";
-import BlogCard from "./BlogCard";
 import BlogSection from "./BlogSection";
-import Gauge from "./Gauge";
-import StyledRadialGauge from './Gauge';
+import StyledRadialGauge from "./Gauge";
+import {getCookie} from "../CRSFCheck";
 
 async function fnd(option1, option2) {
     let val;
@@ -35,6 +32,7 @@ const HeroSection = () => {
     const [selectedOption1, setSelectedOption1] = useState("");
     const [selectedOption2, setSelectedOption2] = useState("1 Year");
     const [gagueValue, setGaugeValue] = useState(0);
+    const [csrfToken, setCsrfToken] = useState("");
     const [state, setState] = useState({
         options: {
             chart: {
@@ -120,7 +118,7 @@ const HeroSection = () => {
             tooltip: {
                 theme: "dark",
                 style: {
-                    fontSize: '0.9rem',
+                    fontSize: "0.9rem",
                 },
                 y: {
                     formatter: (value) => `$${value}`,
@@ -141,19 +139,23 @@ const HeroSection = () => {
     const updateState = (CryptoDataVal) => {
         const newState = {...state};
 
-        const validData = CryptoDataVal.filter(obj => obj.close !== undefined && obj.close !== null && !isNaN(obj.close) && obj.time !== undefined);
+        const validData = CryptoDataVal.filter(
+            (obj) =>
+                obj.close !== undefined &&
+                obj.close !== null &&
+                !isNaN(obj.close) &&
+                obj.time !== undefined
+        );
 
         if (validData.length === 0) {
             console.error("No valid data available for chart.");
-            return; // Early return if no valid data
+            return;
         }
 
-        // Set the series data
         newState.series[0].data = validData.map((obj) => parseFloat(obj.close));
 
-        // Store date strings for tooltip use
         const formattedDates = validData.map((obj) => {
-            const dateObject = new Date(obj.time * 1000); // Convert timestamp to milliseconds
+            const dateObject = new Date(obj.time * 1000);
             return dateObject.toLocaleDateString(undefined, {
                 year: "numeric",
                 month: "short",
@@ -161,22 +163,15 @@ const HeroSection = () => {
             });
         });
 
-        // Log the series data and formatted dates
-        console.log("Series Data:", newState.series[0].data);
-        console.log("Formatted Dates:", formattedDates);
-
-        newState.options.xaxis.categories = validData.map((obj) => obj.time);
-
-        // Ensure x-axis categories are set correctly
         newState.options.xaxis.labels = {
             show: false,
         };
 
-        // Update tooltip configuration
+        newState.options.xaxis.categories = validData.map((obj) => obj.time);
         newState.options.tooltip = {
             theme: "dark",
             style: {
-                fontSize: '0.9rem',
+                fontSize: "0.9rem",
             },
             x: {
                 formatter: (value, {dataPointIndex}) => {
@@ -188,15 +183,15 @@ const HeroSection = () => {
             },
         };
 
-        // Log the final state before setting it
-        console.log("Final Chart State:", newState);
-
         setState(newState);
     };
 
-
     useEffect(() => {
-        const randomCrypto = SymbolsData[Math.floor(Math.random() * SymbolsData.length)];
+        const csrfToken = getCookie('csrftoken')
+        setCsrfToken(csrfToken);
+
+        const randomCrypto =
+            SymbolsData[Math.floor(Math.random() * SymbolsData.length)];
         setSelectedOption1(randomCrypto);
 
         const fetchData = async () => {
@@ -205,7 +200,7 @@ const HeroSection = () => {
 
             const gague = await gagueUpdate(randomCrypto, "y");
             const roundedRsi = Math.round(gague[0].rsi);
-            setGaugeValue(roundedRsi); // Update the gauge value
+            setGaugeValue(roundedRsi);
 
             setKey((key) => key + 1);
         };
@@ -231,9 +226,34 @@ const HeroSection = () => {
         setKey((key) => key + 1);
     };
 
-    const chartGaugeRef = useRef(null);
-    const handleScrollToChartGauge = () => {
-        chartGaugeRef.current.scrollIntoView({behavior: "smooth"});
+    const handleAddToWatchlist = async () => {
+        if (!csrfToken) return;
+        try {
+            const url = `/api/accounts/watchlist/add`;
+            console.log("Request URL:", url);
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken,
+                },
+                body: JSON.stringify({ticker: selectedOption1}),
+            });
+
+            const responseText = await response.text();
+            console.log("Response status:", response.status);
+            console.log("Response body:", responseText);
+
+            if (response.ok) {
+                alert("Added to watchlist!");
+            } else {
+                alert("Failed to add to watchlist.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("An error occurred.");
+        }
     };
 
     return (
@@ -243,38 +263,13 @@ const HeroSection = () => {
                     <div className="hero-info-text">
                         <h1 className="main-heading">Добредојдовте на Finance-Tracker Македонија</h1>
                         <h2 className="main-heading-1">Иднината на акциите и криптовалутите</h2>
-                        <div className="features-section-container">
-                            <h2 className="features-heading">Клучни Карактеристики:</h2>
-                            <ul className="features-list">
-                                <li><strong>Реални Временски Податоци:</strong> Останете информирани со
-                                    најновите цени на акции и криптовалути за да ги искористите сите можности.
-                                </li>
-                                <li><strong>Напредни Аналитики:</strong> Искористете ги најсовремените графикони, тренд
-                                    анализи и индикатори за да ги предвидите пазарните движења.
-                                </li>
-                                <li><strong>Фокус на Македонскиот Пазар:</strong> Пристапете до ексклузивни информации и
-                                    извештаи прилагодени за инвеститорите на Македонската берза.
-                                </li>
-                                <li><strong>Брз и Лесен Пристап:</strong> Безпрекорно истражувајте ги пазарните трендови
-                                    на десктоп или мобилен уред.
-                                </li>
-                                <li><strong>Персонализирани Табли:</strong> Прилагодете го вашето искуство со алатки кои
-                                    ви овозможуваат да ги следите само најважните информации.
-                                </li>
-                                <li><strong>Интеграција на Најнови Вести:</strong> Бидете во тек со курирани вести и
-                                    ажурирања директно од доверливи финансиски извори.
-                                </li>
-                            </ul>
-                            <button className="get-started-btn" onClick={handleScrollToChartGauge}>Започнете Сега
-                            </button>
-                        </div>
                     </div>
                 </div>
                 <div className="hero-image-container">
                     <img className="hero-image" src={hero} alt="blockchain"/>
                 </div>
             </div>
-            <div ref={chartGaugeRef} className="chart-gauge-container">
+            <div className="chart-gauge-container">
                 <div className="chart_container">
                     <div className="chart_header">
                         <select
@@ -302,6 +297,13 @@ const HeroSection = () => {
                         <button className="crypto_button" onClick={handleSaveClick}>
                             Save
                         </button>
+                        {csrfToken && (
+                            <button
+                                onClick={handleAddToWatchlist}
+                            >
+                                ⭐
+                            </button>
+                        )}
                     </div>
                     <Chart
                         key={key}
@@ -312,15 +314,12 @@ const HeroSection = () => {
                         height="350"
                     />
                 </div>
-
                 <StyledRadialGauge
                     gaugeValue={gagueValue}
                     setGaugeValue={setGaugeValue}
                 />
             </div>
             <BlogSection/>
-            {/*<DailyStats />*/}
-            <DevSection/>
         </div>
     );
 };
