@@ -9,17 +9,17 @@ const getSentimentPhrase = (index) => {
 };
 
 export default function News_card(props) {
-    let timeStamp = props.time * 1000;
-    const date = new Date(timeStamp);
-    const dateFormat = date.getHours() + ':' + date.getMinutes() + ', ' + date.toDateString();
+    // let timeStamp = props.time * 1000;
+    const date = new Date(props.time);
+    const dateFormat = date.toDateString();
 
     return (
         <div className="news_cards">
             <span
                 className={`sentiment-badge ${
-                    props.sentiment === 1
+                    props.sentiment === "POSITIVE"
                         ? "positive"
-                        : props.sentiment === 0
+                        : props.sentiment === "NEUTRAL"
                             ? "neutral"
                             : "negative"
                 }`}
@@ -27,7 +27,7 @@ export default function News_card(props) {
         {getSentimentPhrase(props.sentiment)}
       </span>
 
-            <img src={`${props.img}`} className="news_images" alt="News"/>
+            {/*<img src={`${props.img}`} className="news_images" alt="News"/>*/}
             <div className="news_content">
                 <p className="news_date">{dateFormat}</p>
                 <h3 className="news_title">{props.title}</h3>

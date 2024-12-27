@@ -129,3 +129,42 @@ def technical_analysis(request, option1, adder):
     df2 = df2[-1:].to_json(orient="records")
 
     return HttpResponse(df2)
+
+
+def fundamental_analysis(request, issuer):
+    conn = sqlite3.connect("./databases/final_stock_data.db")
+    curs = conn.cursor()
+
+    curs.execute("SELECT * FROM news WHERE company_code = ?", (issuer,))
+    data = curs.fetchall()
+    data = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name', 'sentiment', 'probability'])
+
+    data['date'] = pd.to_datetime(data['date'])
+    data.sort_values(by=['date'], ascending=False, inplace=True)
+
+    data = data.to_json(orient="records")
+    return HttpResponse(data)
+
+def news_article(request, document_id):
+    conn = sqlite3.connect("./databases/final_stock_data.db")
+    curs = conn.cursor()
+
+    curs.execute("""SELECT * FROM news WHERE document_id = ?""", (document_id,))
+    data = curs.fetchall()
+    data = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name', 'sentiment', 'probability'])
+
+    data = data.to_json(orient="records")
+    return HttpResponse(data)
+
+def news(request):
+    conn = sqlite3.connect("./databases/final_stock_data.db")
+    curs = conn.cursor()
+
+    curs.execute("""SELECT * FROM news ORDER BY date DESC LIMIT 100""")
+    data = curs.fetchall()
+
+    data = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name',
+                                       'sentiment', 'probability'])
+
+    data = data.to_json(orient="records")
+    return HttpResponse(data)

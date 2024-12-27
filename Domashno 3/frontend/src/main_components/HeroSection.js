@@ -8,37 +8,33 @@ import DevSection from "./DevSection";
 import BlogCard from "./BlogCard";
 import BlogSection from "./BlogSection";
 import Gauge from "./Gauge";
+import StyledRadialGauge from './Gauge';
 
 async function fnd(option1, option2) {
     let val;
-
     await fetch(`api/price/${option1}/${option2}`)
         .then((res) => res.text())
         .then((text) => {
             val = JSON.parse(text);
         });
-
     return val;
 }
 
 async function gagueUpdate(option1, option2) {
     let val;
-
     await fetch(`api/technical_analysis/${option1}/${option2}`)
         .then((res) => res.text())
         .then((text) => {
             val = JSON.parse(text);
         });
-
     return val;
-
 }
 
 const HeroSection = () => {
     const [key, setKey] = useState(0);
-    const [selectedOption1, setSelectedOption1] = useState(""); // For crypto selection
-    const [selectedOption2, setSelectedOption2] = useState("1 Year"); // Default to "1 Year"
-    const [gagueValue, setGagueValue] = useState(0);
+    const [selectedOption1, setSelectedOption1] = useState("");
+    const [selectedOption2, setSelectedOption2] = useState("1 Year");
+    const [gagueValue, setGaugeValue] = useState(0);
     const [state, setState] = useState({
         options: {
             chart: {
@@ -130,7 +126,7 @@ const HeroSection = () => {
                     formatter: (value) => `$${value}`,
                 },
                 x: {
-                    formatter: (value) => `Date: ${value}`, // Customize as needed
+                    formatter: (value) => `Date: ${value}`,
                 },
             },
         },
@@ -199,16 +195,18 @@ const HeroSection = () => {
     };
 
 
-    // Fetch data for a random coin and 1 Year on page load
     useEffect(() => {
         const randomCrypto = SymbolsData[Math.floor(Math.random() * SymbolsData.length)];
         setSelectedOption1(randomCrypto);
 
-        // Fetch data
         const fetchData = async () => {
             const data = await fnd(randomCrypto, "y");
             updateState(data);
-            // updateState(data); gague
+
+            const gague = await gagueUpdate(randomCrypto, "y");
+            const roundedRsi = Math.round(gague[0].rsi);
+            setGaugeValue(roundedRsi); // Update the gauge value
+
             setKey((key) => key + 1);
         };
 
@@ -226,31 +224,20 @@ const HeroSection = () => {
     const handleSaveClick = async () => {
         const prom = await fnd(selectedOption1, selectedOption2);
         const gague = await gagueUpdate(selectedOption1, selectedOption2);
+        const roundedRsi = Math.round(gague[0].rsi);
+        setGaugeValue(roundedRsi);
+
         updateState(prom);
-        // updateGague(gague);
         setKey((key) => key + 1);
     };
 
     const chartGaugeRef = useRef(null);
-
     const handleScrollToChartGauge = () => {
         chartGaugeRef.current.scrollIntoView({behavior: "smooth"});
     };
+
     return (
         <div className="home">
-            <div className="animated_box">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
             <div className="hero-section-container">
                 <div className="hero-info-wrapper">
                     <div className="hero-info-text">
@@ -325,15 +312,17 @@ const HeroSection = () => {
                         height="350"
                     />
                 </div>
-                <Gauge value={gagueValue}/>
+
+                <StyledRadialGauge
+                    gaugeValue={gagueValue}
+                    setGaugeValue={setGaugeValue}
+                />
             </div>
             <BlogSection/>
-            <DailyStats/>
+            {/*<DailyStats />*/}
             <DevSection/>
         </div>
     );
 };
 
 export default HeroSection;
-
-
