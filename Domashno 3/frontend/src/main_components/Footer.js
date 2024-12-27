@@ -24,13 +24,13 @@ const Footer = () => {
                         <i className="fab fa-instagram"></i>
                     </a>
                 </div>
-                <div className="footer-newsletter">
-                    <p>Претплатете се на нашиот билтен за најновите ажурирања за крипто и акции:</p>
-                    <form>
-                        <input type="email" placeholder="Enter your email"/>
-                        <button type="submit">Претплати се</button>
-                    </form>
-                </div>
+                {/*<div className="footer-newsletter">*/}
+                {/*    <p>Претплатете се на нашиот билтен за најновите ажурирања за крипто и акции:</p>*/}
+                {/*    <form>*/}
+                {/*        <input type="email" placeholder="Enter your email"/>*/}
+                {/*        <button type="submit">Претплати се</button>*/}
+                {/*    </form>*/}
+                {/*</div>*/}
                 <div className="footer-contact">
                     <p>E-mail: <a href="mailto:support@financetracker.mk">finance_tracker_mk@yahoo.com</a></p>
                     <p>Тел: +389 78 232 736</p>
