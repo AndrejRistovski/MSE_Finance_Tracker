@@ -383,30 +383,35 @@ const HeroSection = () => {
             </div>
             <div className="blog-section-container">
                 <div className="blog-section-header">
-                    <h1>
+                    {!csrfToken && (<h1>
+                        Најавете се за дополнителни анализи!!
+                    </h1>)}
+                    {csrfToken && (<h1>
                         Фундаментална анализа и наша проценка за цената базирано на AI
-                    </h1>
+                    </h1>)}
                 </div>
-                <div className="blogs-container">
-                    <BlogCard
-                        key={0}
-                        title={"LSTM невронската мрежа предвиди дека цената ќе биде:"}
-                        description={`${lstm} мкд.`}
-                        imgUrl={"https://www.mse.mk/Images/mse-logo.png"}
-                        sentimentIndex={"POSITIVE"}
-                    />
-                    {blogs.map((blog, index) => {
-                        return (
-                            <BlogCard
-                                key={index}
-                                title={blog.description}
-                                description={blog.content.slice(0, 50)}
-                                imgUrl={"https://www.mse.mk/Images/mse-logo.png"}
-                                sentimentIndex={blog.sentiment}
-                            />
-                        );
-                    })}
-                </div>
+
+                {csrfToken && (
+                    <div className="blogs-container">
+                        <BlogCard
+                            key={0}
+                            title={"LSTM невронската мрежа предвиди дека цената ќе биде:"}
+                            description={`${lstm} мкд.`}
+                            imgUrl={"https://www.mse.mk/Images/mse-logo.png"}
+                            sentimentIndex={"POSITIVE"}
+                        />
+                        {blogs.map((blog, index) => {
+                            return (
+                                <BlogCard
+                                    key={index}
+                                    title={blog.description}
+                                    description={blog.content.slice(0, 50)}
+                                    imgUrl={"https://www.mse.mk/Images/mse-logo.png"}
+                                    sentimentIndex={blog.sentiment}
+                                />
+                            );
+                        })}
+                    </div>)}
             </div>
         </div>
     );
