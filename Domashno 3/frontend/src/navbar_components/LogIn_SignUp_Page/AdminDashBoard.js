@@ -1,101 +1,107 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './AdminDashBoard.css';
 import Slideshow from './SlideShow';
-import SelectedStocks from './SelectedStocks';
-import {Link} from 'react-router-dom';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-} from 'chart.js';
+import {Link, redirect, useNavigate} from 'react-router-dom';
+import {getCookie} from "../../CRSFCheck";
+import "./SelectedStocks.css";
+import Navbar from "../Navbar";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const AdminDashboard = () => {
-    const stockChartData = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [
-            {
-                label: 'Portfolio Performance',
-                data: [10, 20, 15, 30, 25, 40, 35, 50, 45, 60, 55, 70],
-                borderColor: '#00d4ff',
-                backgroundColor: 'rgba(0, 212, 255, 0.2)',
-                tension: 0.4,
-            },
-        ],
+
+    const [stocks, setStocks] = useState([]);
+    const csrftoken = getCookie("csrftoken");
+    const navigate = useNavigate();
+
+    console.log(csrftoken)
+    useEffect(() => {
+        if (!csrftoken) {
+            console.log("CSRF token is missing, redirecting...");
+            navigate("/log_in");
+        }
+    }, [csrftoken, navigate]);
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`/api/accounts/watchlist/${id}`, {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken,
+                },
+            });
+
+            if (response.ok) {
+                setStocks(stocks.filter((stock) => stock.id !== id)); // Remove from UI
+            } else {
+                console.error("Failed to delete stock:", response.status);
+            }
+        } catch (error) {
+            console.error("Error deleting stock:", error);
+        }
     };
 
-    const userChartData = {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        datasets: [
-            {
-                label: 'Active Users',
-                data: [5, 15, 10, 20, 30, 25, 40],
-                borderColor: '#1e90ff',
-                backgroundColor: 'rgba(30, 144, 255, 0.2)',
-                tension: 0.4,
-            },
-        ],
+
+    const watchlist = async () => {
+        try {
+            const response = await fetch("/api/accounts/watchlist/", {
+                method: "GET",
+                credentials: "include", // Include cookies
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken, // Function to get CSRF token
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Watchlist:", data);
+                setStocks(data)
+            } else {
+                console.error("Failed to fetch watchlist:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching watchlist:", error);
+        }
     };
 
-    const stockData = [
-        {name: "Комерцијална банка", symbol: "KMB", price: "1,500", change: "+2.5", volume: "2,000"},
-        {name: "Макпетрол", symbol: "MKP", price: "3,100", change: "-1.2", volume: "1,200"},
-        {name: "Алкалоид AD Скопје", symbol: "ALK", price: "9,800", change: "+0.8", volume: "800"},
-        {name: "Комерцијална банка", symbol: "KMB", price: "1,500", change: "+2.5", volume: "2,000"},
-        {name: "Макпетрол", symbol: "MKP", price: "3,100", change: "-1.2", volume: "1,200"},
-        // Add more rows here
-    ];
+    useEffect(() => {
+        watchlist();
+    }, []); // Empty dependency array ensures it runs only once
+
 
     return (
         <div className="admin-dashboard">
+            <Navbar/>
             <div className="admin-dashboard">
-
-                <nav className="admin-navbar">
-                    <h1 className="admin-navbar-title">Корисничко име</h1>
-                    <div className="admin-navbar-links">
-                        <Link to="/">Дома</Link>
-                        <Link to="/contact">Контакт</Link>
-                        <button className="log_out_btn">Одјава</button>
-                    </div>
-                </nav>
-
                 <header className="dashboard-header">
-                    <h2>Добредојдовте на Finance-Tracker Админ Панелот</h2>
+                    <h2>Добредојдовте на Корисничкиот Панел</h2>
                 </header>
 
                 <div className="dashboard-content">
 
                     <div className="dashboard-row">
-                        <SelectedStocks/>
+                        <div className="dashboard-card">
+                            <h3>Омилени акции</h3>
+                            <ul className="stocks-list">
+                                {stocks.map((stock) => (
+                                    <li key={stock.id} className="stock-item">
+                        <span>
+                            {stock.stock_ticker}
+                        </span>
+                                        <button
+                                            className="delete-btn"
+                                            onClick={() => handleDelete(stock.id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                         <div className="dashboard-card-news">
                             <Slideshow/>
-                        </div>
-                    </div>
-
-
-                    <div className="activity-stats-panel">
-                        <h3>Статистики за Активности</h3>
-                        <ul className="activity-list">
-                            <li>Избришано „Комерцијална Банка (KMB)”</li>
-                            <li>Ажурирано „Макпетрол (MKP)”</li>
-                            <li>Додадена нова акција „Стопанска Банка (SB)”</li>
-                            <li>Прегледан извештај за перформансите на акциите</li>
-                        </ul>
-                    </div>
-
-                    <div className="chart-gauge-container">
-                        <div className="chart_container">
-                        </div>
-                        <div className="advise">
-                            <p>Според анализите за <b>‘Акцијата’</b> ние предвидуваме
-                                дека <b>‘акцијата’</b> ќе <b>‘расте/опаѓа’</b>.</p>
-                            <p>Совет: <b>‘купи/продај’</b></p>
                         </div>
                     </div>
                 </div>

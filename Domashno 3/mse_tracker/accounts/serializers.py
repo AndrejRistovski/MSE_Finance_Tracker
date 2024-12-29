@@ -55,3 +55,12 @@ class AddToWatchlistSerializer(serializers.ModelSerializer):
             return Watchlist.objects.create(user=user, stock=stock)
         except IntegrityError:
             raise serializers.ValidationError(f"The stock '{stock.ticker}' is already in your watchlist.")
+
+
+class WatchlistSerializer(serializers.ModelSerializer):
+    stock_name = serializers.CharField(source='stock.name', read_only=True)
+    stock_ticker = serializers.CharField(source='stock.ticker', read_only=True)
+
+    class Meta:
+        model = Watchlist
+        fields = ['id', 'stock_name', 'stock_ticker']

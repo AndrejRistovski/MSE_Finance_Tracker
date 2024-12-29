@@ -256,6 +256,11 @@ const HeroSection = () => {
         }
     };
 
+    const chartGaugeRef = useRef(null);
+    const handleScrollToChartGauge = () => {
+        chartGaugeRef.current.scrollIntoView({behavior: "smooth"});
+    };
+
     return (
         <div className="home">
             <div className="hero-section-container">
@@ -263,13 +268,38 @@ const HeroSection = () => {
                     <div className="hero-info-text">
                         <h1 className="main-heading">Добредојдовте на Finance-Tracker Македонија</h1>
                         <h2 className="main-heading-1">Иднината на акциите и криптовалутите</h2>
+                        <div className="features-section-container">
+                            <h2 className="features-heading">Клучни Карактеристики:</h2>
+                            <ul className="features-list">
+                                <li><strong>Реални Временски Податоци:</strong> Останете информирани со
+                                    најновите цени на акции и криптовалути за да ги искористите сите можности.
+                                </li>
+                                <li><strong>Напредни Аналитики:</strong> Искористете ги најсовремените графикони, тренд
+                                    анализи и индикатори за да ги предвидите пазарните движења.
+                                </li>
+                                <li><strong>Фокус на Македонскиот Пазар:</strong> Пристапете до ексклузивни информации и
+                                    извештаи прилагодени за инвеститорите на Македонската берза.
+                                </li>
+                                <li><strong>Брз и Лесен Пристап:</strong> Безпрекорно истражувајте ги пазарните трендови
+                                    на десктоп или мобилен уред.
+                                </li>
+                                <li><strong>Персонализирани Табли:</strong> Прилагодете го вашето искуство со алатки кои
+                                    ви овозможуваат да ги следите само најважните информации.
+                                </li>
+                                <li><strong>Интеграција на Најнови Вести:</strong> Бидете во тек со курирани вести и
+                                    ажурирања директно од доверливи финансиски извори.
+                                </li>
+                            </ul>
+                            <button className="get-started-btn" onClick={handleScrollToChartGauge}>Започнете Сега
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div className="hero-image-container">
                     <img className="hero-image" src={hero} alt="blockchain"/>
                 </div>
             </div>
-            <div className="chart-gauge-container">
+            <div ref={chartGaugeRef} className="chart-gauge-container">
                 <div className="chart_container">
                     <div className="chart_header">
                         <select

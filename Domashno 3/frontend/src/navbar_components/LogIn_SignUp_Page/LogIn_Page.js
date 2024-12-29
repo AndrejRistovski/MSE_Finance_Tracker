@@ -44,7 +44,7 @@ export default function LogIn_Page() {
         .then((response) => {
             if (response.status === 200) {
                 console.log(response.data.message);
-                navigate("/dashboard");
+                navigate("/admin_dashboard");
             }
         })
         .catch((error) => {

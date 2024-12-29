@@ -8,9 +8,30 @@ export default function Navbar() {
     const csrftoken = getCookie("csrftoken");
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        navigate("/");
+    const handleLogout = async () => {
+        try {
+            // Send a POST request to the logout endpoint
+            const response = await fetch("/api/accounts/logout/", {
+                method: "POST",
+                credentials: "include", // Ensure cookies are included
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken,
+                },
+            });
+
+            if (response.ok) {
+                // Clear cookies or other session storage if necessary
+                document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                // Redirect user to the home or login page
+                navigate("/");
+            } else {
+                console.error("Logout failed:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error during logout:", error);
+        }
     };
 
     return (
@@ -25,8 +46,8 @@ export default function Navbar() {
                             </Link>
                         </li>
                         <li className="number_2">
-                            <Link to="/f.a.q." className="navbar_text">
-                                F.A.Q.
+                            <Link to="/faq" className="navbar_text">
+                                ЧПП
                             </Link>
                         </li>
                         <li className="number_3">
