@@ -5,13 +5,16 @@ import time
 import pandas as pd
 import numpy as np
 import itertools
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 
 from api.utils.fetcher import pipeline
 from api.utils.mappers import convert_date, convert_number
 from api.utils.technical_analysis_utils import *
+from sklearn.preprocessing import LabelEncoder
+from keras.saving import load_model
+
 
 
 def index(request):
@@ -137,13 +140,16 @@ def fundamental_analysis(request, issuer):
 
     curs.execute("SELECT * FROM news WHERE company_code = ?", (issuer,))
     data = curs.fetchall()
-    data = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name', 'sentiment', 'probability'])
+    data = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name',
+                                       'sentiment', 'probability'])
 
     data['date'] = pd.to_datetime(data['date'])
     data.sort_values(by=['date'], ascending=False, inplace=True)
 
+    data = data[:2]
     data = data.to_json(orient="records")
     return HttpResponse(data)
+
 
 def news_article(request, document_id):
     conn = sqlite3.connect("./databases/final_stock_data.db")
@@ -151,10 +157,12 @@ def news_article(request, document_id):
 
     curs.execute("""SELECT * FROM news WHERE document_id = ?""", (document_id,))
     data = curs.fetchall()
-    data = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name', 'sentiment', 'probability'])
+    data = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name',
+                                       'sentiment', 'probability'])
 
     data = data.to_json(orient="records")
     return HttpResponse(data)
+
 
 def news(request):
     conn = sqlite3.connect("./databases/final_stock_data.db")
@@ -168,3 +176,52 @@ def news(request):
 
     data = data.to_json(orient="records")
     return HttpResponse(data)
+
+
+def lstm_prediction(request, issuer):
+    # Connect to SQLite database
+    conn = sqlite3.connect("./databases/final_stock_data.db")
+    curs = conn.cursor()
+
+    # Fetch data for the given issuer
+    curs.execute("""SELECT * FROM stock_prices WHERE issuer = ?""", (issuer,))
+    data = curs.fetchall()
+    conn.close()
+
+    # Create a DataFrame
+    dataframe = pd.DataFrame(data, columns=['issuer', 'date', 'cena_posledna', 'mak', 'min', 'average',
+                                            'percentChange', 'kolichina', 'prometbest', 'vkupenPromet'])
+
+    # Convert columns to appropriate formats
+    dataframe['date'] = dataframe['date'].apply(convert_date).astype(int)
+    dataframe['cena_posledna'] = dataframe['cena_posledna'].apply(convert_number)
+
+    # Prepare a smaller DataFrame with only necessary columns
+    df2 = pd.DataFrame()
+    df2['time'] = dataframe['date']
+    df2['close'] = dataframe['cena_posledna']
+    df2['issuer'] = dataframe['issuer']
+
+    # Sort values and set index
+    df2 = df2.sort_values(by=['time'])
+    df2['time'] = pd.to_datetime(df2['time'], unit="s")
+    df2.set_index('time', inplace=True)
+    df2.sort_index(inplace=True)
+
+    # Get the last three closing prices for prediction
+    close_prices = df2['close'].values
+    if len(close_prices) < 3:
+        return JsonResponse({"error": "Not enough data to make a prediction"}, status=400)
+
+    last_three_days = close_prices[-3:]  # Get the last three prices
+    input_data = np.array(last_three_days).reshape((1, 3, 1))  # Reshape for LSTM input (1 sample, 3 timesteps, 1 feature)
+
+    # Load the trained LSTM model
+    model = load_model("./stock_lstm.keras")
+
+    # Predict the next day's price
+    prediction = model.predict(input_data)
+    predicted_price = int(prediction[0][0])  # Extract the single predicted value
+
+    # Return the prediction as JSON
+    return JsonResponse({"predicted_price": predicted_price/269})

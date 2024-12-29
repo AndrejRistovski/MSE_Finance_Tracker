@@ -6,6 +6,7 @@ import "./HeroSection.css";
 import BlogSection from "./BlogSection";
 import StyledRadialGauge from "./Gauge";
 import {getCookie} from "../CRSFCheck";
+import BlogCard from "./BlogCard";
 
 async function fnd(option1, option2) {
     let val;
@@ -27,12 +28,35 @@ async function gagueUpdate(option1, option2) {
     return val;
 }
 
+async function fundamentalAnalysis(option1) {
+    let val;
+    await fetch(`api/fundamental_analysis/${option1}`)
+        .then((res) => res.text())
+        .then((text) => {
+            val = JSON.parse(text);
+        });
+    return val;
+}
+
+async function lstm_pred(option1) {
+    let val;
+    await fetch(`api/lstm_prediction/${option1}`)
+        .then((res) => res.text())
+        .then((text) => {
+            val = JSON.parse(text);
+        });
+    return val.predicted_price;
+}
+
+
 const HeroSection = () => {
     const [key, setKey] = useState(0);
     const [selectedOption1, setSelectedOption1] = useState("");
     const [selectedOption2, setSelectedOption2] = useState("1 Year");
     const [gagueValue, setGaugeValue] = useState(0);
     const [csrfToken, setCsrfToken] = useState("");
+    const [blogs, setBlogs] = useState([])
+    const [lstm, setLstm] = useState(0)
     const [state, setState] = useState({
         options: {
             chart: {
@@ -201,7 +225,11 @@ const HeroSection = () => {
             const gague = await gagueUpdate(randomCrypto, "y");
             const roundedRsi = Math.round(gague[0].rsi);
             setGaugeValue(roundedRsi);
-
+            const blogslist = await fundamentalAnalysis(randomCrypto)
+            setBlogs(blogslist)
+            console.log(blogs)
+            const lstmpred = await lstm_pred(randomCrypto)
+            setLstm(lstmpred)
             setKey((key) => key + 1);
         };
 
@@ -221,8 +249,12 @@ const HeroSection = () => {
         const gague = await gagueUpdate(selectedOption1, selectedOption2);
         const roundedRsi = Math.round(gague[0].rsi);
         setGaugeValue(roundedRsi);
-
         updateState(prom);
+        const blogslist = await fundamentalAnalysis(selectedOption1)
+        setBlogs(blogslist)
+        console.log(blogs)
+        const lstmpred = await lstm_pred(selectedOption1)
+        setLstm(lstmpred)
         setKey((key) => key + 1);
     };
 
@@ -349,7 +381,33 @@ const HeroSection = () => {
                     setGaugeValue={setGaugeValue}
                 />
             </div>
-            <BlogSection/>
+            <div className="blog-section-container">
+                <div className="blog-section-header">
+                    <h1>
+                        Фундаментална анализа и наша проценка за цената базирано на AI
+                    </h1>
+                </div>
+                <div className="blogs-container">
+                    <BlogCard
+                        key={0}
+                        title={"LSTM невронската мрежа предвиди дека цената ќе биде:"}
+                        description={`${lstm} мкд.`}
+                        imgUrl={"https://www.mse.mk/Images/mse-logo.png"}
+                        sentimentIndex={"POSITIVE"}
+                    />
+                    {blogs.map((blog, index) => {
+                        return (
+                            <BlogCard
+                                key={index}
+                                title={blog.description}
+                                description={blog.content.slice(0, 50)}
+                                imgUrl={"https://www.mse.mk/Images/mse-logo.png"}
+                                sentimentIndex={blog.sentiment}
+                            />
+                        );
+                    })}
+                </div>
+            </div>
         </div>
     );
 };

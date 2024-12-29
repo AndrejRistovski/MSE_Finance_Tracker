@@ -10,10 +10,9 @@ export default function Navbar() {
 
     const handleLogout = async () => {
         try {
-            // Send a POST request to the logout endpoint
             const response = await fetch("/api/accounts/logout/", {
                 method: "POST",
-                credentials: "include", // Ensure cookies are included
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": csrftoken,
@@ -21,10 +20,8 @@ export default function Navbar() {
             });
 
             if (response.ok) {
-                // Clear cookies or other session storage if necessary
                 document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-                // Redirect user to the home or login page
                 navigate("/");
             } else {
                 console.error("Logout failed:", response.statusText);
@@ -64,12 +61,12 @@ export default function Navbar() {
                             <>
                                 <li>
                                     <Link to="/admin_dashboard" className="subscribe" role="button">
-                                        Dashboard
+                                        Кориснички Панел
                                     </Link>
                                 </li>
                                 <li>
                                     <button className="subscribe" onClick={handleLogout}>
-                                        Logout
+                                        Одјави се
                                     </button>
                                 </li>
                             </>

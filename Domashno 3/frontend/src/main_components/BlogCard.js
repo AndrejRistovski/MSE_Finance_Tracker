@@ -8,24 +8,24 @@ const getSentimentPhrase = (index) => {
     return "";
 };
 
-const BlogCard = ({ title, description, imgUrl, sentimentIndex }) => {
+const BlogCard = ({title, description, imgUrl, sentimentIndex}) => {
     return (
         <div className="img-card-container">
             {/* Sentiment badge in the top-right corner */}
             <span
                 className={`sentiment-badge ${
-                    sentimentIndex === 1
+                    sentimentIndex === "POSITIVE"
                         ? "positive"
-                        : sentimentIndex === 0
-                        ? "neutral"
-                        : "negative"
+                        : sentimentIndex === "NEUTRAL"
+                            ? "neutral"
+                            : "negative"
                 }`}
             >
                 {getSentimentPhrase(sentimentIndex)}
             </span>
 
             <div className="img-wrapper">
-                <img className="card-image" src={imgUrl} alt="blog" />
+                <img className="card-image" src={imgUrl} alt="blog"/>
             </div>
             <div className="img-card-overlay">
                 <div className="img-card-overlay-text">
