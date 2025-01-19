@@ -3,6 +3,7 @@ import Chart from "react-apexcharts";
 import {SymbolsData} from "../stock_info/Symbols";
 import hero from "../images/images_svg/hero.svg";
 import "./MainSection.css";
+import "./BlogSection.css";
 import StyledRadialGauge from "./Gauge";
 import {getCookie} from "../CRSFCheck";
 import BlogCard from "./BlogCard";
