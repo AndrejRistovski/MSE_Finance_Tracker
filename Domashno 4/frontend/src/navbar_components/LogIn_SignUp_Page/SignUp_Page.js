@@ -42,7 +42,7 @@ export default function SignUp_Page() {
     const signUpUser = (e) => {
         console.log(name, email, password);
         e.preventDefault();
-        axios.post('http://127.0.0.1:8000/api/accounts/register/', { // Update to your Django API URL
+        axios.post('http://localhost:8000/api/accounts/register/', { // Update to your Django API URL
             username: name.trim(),     // "name" should map to "username" for Django
             email: email.trim(),       // Email address field
             password: password.trim()   // "password" here maps to the password input

@@ -1,5 +1,5 @@
 let val;
-await fetch("api/symbols").then((res) => res.text())
+await fetch("http://localhost:8000/api/symbols").then((res) => res.text())
     .then((text) => {
         val = JSON.parse(text);
     });

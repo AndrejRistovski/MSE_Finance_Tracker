@@ -7,13 +7,14 @@ from rest_framework import status
 from django.contrib.auth import login
 from rest_framework.generics import ListAPIView, DestroyAPIView
 from .models import Watchlist
+from django.middleware.csrf import get_token
+
 
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-
         username = request.data.get("username")
         password = request.data.get("password")
 
@@ -21,7 +22,16 @@ class LoginView(APIView):
 
         if user is not None:
             login(request, user)
-            return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+            csrf_token = get_token(request)  # Retrieve CSRF token
+            response = Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+            response.set_cookie(
+                key="csrftoken",
+                value=csrf_token,
+                httponly=False,  # Allow JavaScript access
+                samesite='None',  # For cross-origin requests, use 'None'
+                secure=False  # Use True if using HTTPS
+            )  # Set CSRF token in cookies
+            return response
         else:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -86,4 +96,3 @@ class DeleteFromWatchlistView(DestroyAPIView):
                             status=status.HTTP_204_NO_CONTENT)
         except Watchlist.DoesNotExist:
             return Response({"error": "Stock not found in your watchlist."}, status=status.HTTP_404_NOT_FOUND)
-

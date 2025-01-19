@@ -10,7 +10,7 @@ const NewsPage = () => {
     useEffect(() => {
         const fetchNewsData = async () => {
             try {
-                let response = await fetch("api/news"); // Fetch data from your endpoint
+                let response = await fetch("http://localhost:8000/api/news"); // Fetch data from your endpoint
                 let text = await response.text();
                 let parsedData = JSON.parse(text);
                 setNewsData(parsedData);

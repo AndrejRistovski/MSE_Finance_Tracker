@@ -17,10 +17,20 @@ services:
 
   backend:
     build:
-      context: ./mse_tracker
+      context: ./mse_tracker/
       dockerfile: Dockerfile
-    command: python manage.py runserver 127.0.0.1:8000
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./mse_tracker:/app
     ports:
       - "8000:8000"
+
+  lstm:
+    build:
+      context: ./lstm_predictor/
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8001
+    volumes:
+      - ./lstm_predictor:/app
+    ports:
+      - "8001:8001"

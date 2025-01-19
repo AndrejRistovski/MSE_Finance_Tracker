@@ -23,7 +23,7 @@ const AdminDashboard = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await fetch(`/api/accounts/watchlist/${id}`, {
+            const response = await fetch(`http://localhost:8000/api/accounts/watchlist/${id}`, {
                 method: "DELETE",
                 credentials: "include",
                 headers: {
@@ -45,7 +45,7 @@ const AdminDashboard = () => {
 
     const watchlist = async () => {
         try {
-            const response = await fetch("/api/accounts/watchlist/", {
+            const response = await fetch("http://localhost:8000/api/accounts/watchlist/", {
                 method: "GET",
                 credentials: "include", // Include cookies
                 headers: {

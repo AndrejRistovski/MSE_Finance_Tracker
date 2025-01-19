@@ -10,7 +10,7 @@ import BlogCard from "./BlogCard";
 
 async function fetchStockData(option1, option2) {
     let val;
-    await fetch(`api/price/${option1}/${option2}`)
+    await fetch(`http://localhost:8000/api/price/${option1}/${option2}`)
         .then((res) => res.text())
         .then((text) => {
             val = JSON.parse(text);
@@ -20,7 +20,7 @@ async function fetchStockData(option1, option2) {
 
 async function gagueUpdate(option1, option2) {
     let val;
-    await fetch(`api/technical_analysis/${option1}/${option2}`)
+    await fetch(`http://localhost:8000/api/technical_analysis/${option1}/${option2}`)
         .then((res) => res.text())
         .then((text) => {
             val = JSON.parse(text);
@@ -30,7 +30,7 @@ async function gagueUpdate(option1, option2) {
 
 async function fundamentalAnalysis(option1) {
     let val;
-    await fetch(`api/fundamental_analysis/${option1}`)
+    await fetch(`http://localhost:8000/api/fundamental_analysis/${option1}`)
         .then((res) => res.text())
         .then((text) => {
             val = JSON.parse(text);
@@ -40,7 +40,7 @@ async function fundamentalAnalysis(option1) {
 
 async function lstm_pred(option1) {
     let val;
-    await fetch(`api/lstm_prediction/${option1}`)
+    await fetch(`http://localhost:8000/api/lstm_prediction/${option1}`)
         .then((res) => res.text())
         .then((text) => {
             val = JSON.parse(text);

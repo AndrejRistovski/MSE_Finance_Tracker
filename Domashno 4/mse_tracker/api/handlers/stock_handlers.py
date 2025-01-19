@@ -1,3 +1,4 @@
+import requests
 from django.http import JsonResponse, HttpResponse
 import pandas as pd
 import numpy as np
@@ -72,21 +73,36 @@ class FundamentalAnalysisHandler(StockHandler):
 
 class LSTMPredictionHandler(StockHandler):
     def process(self, issuer):
-        data = fetch_data("SELECT * FROM stock_prices WHERE issuer = ?", (issuer,))
-        dataframe = preprocess_stock_data(data)
-        df2 = dataframe[['date', 'cena_posledna']].rename(columns={'date': 'time', 'cena_posledna': 'close'})
-        df2['time'] = pd.to_datetime(df2['time'], unit="s")
-        df2.set_index('time', inplace=True)
+        try:
+            # Fetch stock data for the specified issuer
+            data = fetch_data("SELECT * FROM stock_prices WHERE issuer = ?", (issuer,))
+            dataframe = preprocess_stock_data(data)
+            df2 = dataframe[['date', 'cena_posledna']].rename(columns={'date': 'time', 'cena_posledna': 'close'})
+            df2['time'] = pd.to_datetime(df2['time'], unit="s")
+            df2.set_index('time', inplace=True)
 
-        close_prices = df2['close'].values
-        if len(close_prices) < 3:
-            return JsonResponse({"error": "Not enough data to make a prediction"}, status=400)
+            # Extract the close prices
+            close_prices = df2['close'].values.tolist()
 
-        input_data = np.array(close_prices[-3:]).reshape((1, 3, 1))
-        model = load_model("./stock_lstm.keras")
-        predicted_price = model.predict(input_data)[0][0]
+            if len(close_prices) < 3:
+                return JsonResponse({"error": "Not enough data to make a prediction"}, status=400)
 
-        return JsonResponse({"predicted_price": predicted_price / 269})
+            # Prepare request data for the LSTM microservice
+            request_payload = {"close_prices": close_prices[-3:]}  # Send only the last 3 prices
+            microservice_url = "http://lstm:8001/predict/"  # Adjust the URL to your microservice
+
+            # Make a POST request to the microservice
+            response = requests.post(microservice_url, json=request_payload)
+
+            # Handle the response from the microservice
+            if response.status_code == 200:
+                return JsonResponse(response.json(), status=200)
+            else:
+                error_message = response.json().get("error", "Unknown error from microservice")
+                return JsonResponse({"error": f"Microservice error: {error_message}"}, status=response.status_code)
+
+        except Exception as e:
+            return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
 
 
 class StockHandlerFactory:

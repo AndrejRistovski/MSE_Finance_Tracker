@@ -32,14 +32,14 @@ export default function LogIn_Page() {
     const logInUser = (e) => {
         e.preventDefault();
 
-
-        axios.post('/api/accounts/login/', {
+        axios.post('http://localhost:8000/api/accounts/login/', {
             username: username,
             password: password
         }, {
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            withCredentials: true,
         })
         .then((response) => {
             if (response.status === 200) {
