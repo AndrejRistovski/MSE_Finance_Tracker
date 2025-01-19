@@ -87,14 +87,11 @@ class LSTMPredictionHandler(StockHandler):
             if len(close_prices) < 3:
                 return JsonResponse({"error": "Not enough data to make a prediction"}, status=400)
 
-            # Prepare request data for the LSTM microservice
-            request_payload = {"close_prices": close_prices[-3:]}  # Send only the last 3 prices
-            microservice_url = "http://lstm:8001/predict/"  # Adjust the URL to your microservice
+            request_payload = {"close_prices": close_prices[-3:]}
+            microservice_url = "http://lstm:8001/predict/"
 
-            # Make a POST request to the microservice
             response = requests.post(microservice_url, json=request_payload)
 
-            # Handle the response from the microservice
             if response.status_code == 200:
                 return JsonResponse(response.json(), status=200)
             else:
