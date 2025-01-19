@@ -1,6 +1,6 @@
 import './App.css';
 import Navbar from "./navbar_components/Navbar";
-import HeroSection from './main_components/HeroSection';
+import MainSection from './main_components/MainSection';
 import Footer from "./main_components/Footer";
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
         <div className="app">
             <Navbar/>
             <div>
-                <HeroSection/>
+                <MainSection/>
                 <Footer/>
             </div>
         </div>

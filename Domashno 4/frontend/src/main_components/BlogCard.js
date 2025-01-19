@@ -11,7 +11,6 @@ const getSentimentPhrase = (index) => {
 const BlogCard = ({title, description, imgUrl, sentimentIndex}) => {
     return (
         <div className="img-card-container">
-            {/* Sentiment badge in the top-right corner */}
             <span
                 className={`sentiment-badge ${
                     sentimentIndex === "POSITIVE"

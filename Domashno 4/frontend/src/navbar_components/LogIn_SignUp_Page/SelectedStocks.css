@@ -1,55 +1,55 @@
-.dashboard-card {
-    background: linear-gradient(145deg, #1f1f1f, #292929);
-    padding: 20px;
-    border-radius: 15px;
-    margin: 20px 0;
-    color: #ffffff;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+/*.dashboard-card {*/
+/*    background: linear-gradient(145deg, #1f1f1f, #292929);*/
+/*    padding: 20px;*/
+/*    border-radius: 15px;*/
+/*    margin: 20px 0;*/
+/*    color: #ffffff;*/
+/*    transition: transform 0.3s ease, box-shadow 0.3s ease;*/
+/*}*/
 
-.stocks-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 1rem;
-    color: #ffffff;
-}
+/*.stocks-list {*/
+/*    list-style: none;*/
+/*    padding: 0;*/
+/*    margin: 0;*/
+/*    font-size: 1rem;*/
+/*    color: #ffffff;*/
+/*}*/
 
-.stock-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #2a2a40;
-    transition: background-color 0.2s ease;
-}
+/*.stock-item {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
+/*    padding: 15px 0;*/
+/*    border-bottom: 1px solid #2a2a40;*/
+/*    transition: background-color 0.2s ease;*/
+/*}*/
 
-.stock-item:hover {
-    background-color: #3d3d3d;
-    border-radius: 10px;
-}
+/*.stock-item:hover {*/
+/*    background-color: #3d3d3d;*/
+/*    border-radius: 10px;*/
+/*}*/
 
-.stock-item span {
-    color: #00d4ff;
-    font-weight: 500;
-}
+/*.stock-item span {*/
+/*    color: #00d4ff;*/
+/*    font-weight: 500;*/
+/*}*/
 
-.delete-btn {
-    background-color: #ff4c4c;
-    border: none;
-    color: white;
-    padding: 7px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
+/*.delete-btn {*/
+/*    background-color: #ff4c4c;*/
+/*    border: none;*/
+/*    color: white;*/
+/*    padding: 7px 12px;*/
+/*    border-radius: 8px;*/
+/*    cursor: pointer;*/
+/*    font-size: 0.9rem;*/
+/*    transition: background-color 0.3s ease, transform 0.2s ease;*/
+/*}*/
 
-.delete-btn:hover {
-    background-color: #ff1a1a;
-    transform: scale(1.1);
-}
+/*.delete-btn:hover {*/
+/*    background-color: #ff1a1a;*/
+/*    transform: scale(1.1);*/
+/*}*/
 
-.delete-btn:active {
-    transform: scale(0.9);
-}
+/*.delete-btn:active {*/
+/*    transform: scale(0.9);*/
+/*}*/

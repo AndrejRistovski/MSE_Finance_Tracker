@@ -12,7 +12,7 @@ import Privacy_Policy from "../footer_components/Privacy_Policy";
 import Terms_Conditions from "../footer_components/Terms_Conditions";
 import {AnimatePresence} from "framer-motion";
 
-export default function Animation_Routes() {
+export default function App_Routes() {
 
     const location = useLocation();
     return (

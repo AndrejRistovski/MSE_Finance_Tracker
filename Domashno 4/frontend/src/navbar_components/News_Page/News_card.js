@@ -9,7 +9,6 @@ const getSentimentPhrase = (index) => {
 };
 
 export default function News_card(props) {
-    // let timeStamp = props.time * 1000;
     const date = new Date(props.time);
     const dateFormat = date.toDateString();
 
@@ -27,7 +26,6 @@ export default function News_card(props) {
         {getSentimentPhrase(props.sentiment)}
       </span>
 
-            {/*<img src={`${props.img}`} className="news_images" alt="News"/>*/}
             <div className="news_content">
                 <p className="news_date">{dateFormat}</p>
                 <h3 className="news_title">{props.title}</h3>

@@ -98,11 +98,6 @@ const NewsPage = () => {
                                 >
                                     {article.sentiment === 1 ? "" : article.sentiment === 0 ? "" : ""}
                                 </span>
-                                {/*<img*/}
-                                {/*    // src={article.img}*/}
-                                {/*    alt="Thumbnail"*/}
-                                {/*    className="sidebar-news-image"*/}
-                                {/*/>*/}
                                 <div className="sidebar-news-text">
                                     <h4>{article.description}</h4>
                                     <p className="article-date">

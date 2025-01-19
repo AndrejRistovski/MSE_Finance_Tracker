@@ -2,13 +2,12 @@ import React, {useState, useEffect, useRef} from "react";
 import Chart from "react-apexcharts";
 import {SymbolsData} from "../stock_info/Symbols";
 import hero from "../images/images_svg/hero.svg";
-import "./HeroSection.css";
-import BlogSection from "./BlogSection";
+import "./MainSection.css";
 import StyledRadialGauge from "./Gauge";
 import {getCookie} from "../CRSFCheck";
 import BlogCard from "./BlogCard";
 
-async function fnd(option1, option2) {
+async function fetchStockData(option1, option2) {
     let val;
     await fetch(`api/price/${option1}/${option2}`)
         .then((res) => res.text())
@@ -49,7 +48,7 @@ async function lstm_pred(option1) {
 }
 
 
-const HeroSection = () => {
+const MainSection = () => {
     const [key, setKey] = useState(0);
     const [selectedOption1, setSelectedOption1] = useState("");
     const [selectedOption2, setSelectedOption2] = useState("1 Year");
@@ -219,7 +218,7 @@ const HeroSection = () => {
         setSelectedOption1(randomCrypto);
 
         const fetchData = async () => {
-            const data = await fnd(randomCrypto, "y");
+            const data = await fetchStockData(randomCrypto, "y");
             updateState(data);
 
             const gague = await gagueUpdate(randomCrypto, "y");
@@ -245,7 +244,7 @@ const HeroSection = () => {
     };
 
     const handleSaveClick = async () => {
-        const prom = await fnd(selectedOption1, selectedOption2);
+        const prom = await fetchStockData(selectedOption1, selectedOption2);
         const gague = await gagueUpdate(selectedOption1, selectedOption2);
         const roundedRsi = Math.round(gague[0].rsi);
         setGaugeValue(roundedRsi);
@@ -417,4 +416,4 @@ const HeroSection = () => {
     );
 };
 
-export default HeroSection;
+export default MainSection;
