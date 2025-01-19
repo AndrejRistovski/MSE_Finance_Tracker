@@ -20,7 +20,6 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
 
         if user is not None:
-            # logiranje na korisnikot
             login(request, user)
             return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
         else:

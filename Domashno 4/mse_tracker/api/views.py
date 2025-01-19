@@ -4,224 +4,143 @@ import sqlite3
 import time
 import pandas as pd
 import numpy as np
-import itertools
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-
 from api.utils.fetcher import pipeline
 from api.utils.mappers import convert_date, convert_number
 from api.utils.technical_analysis_utils import *
 from sklearn.preprocessing import LabelEncoder
 from keras.saving import load_model
 
+def connect_to_db():
+    return sqlite3.connect("./databases/final_stock_data.db")
 
+def fetch_data(query, params=()):
+    with connect_to_db() as conn:
+        curs = conn.cursor()
+        curs.execute(query, params)
+        return curs.fetchall()
+
+def preprocess_stock_data(data):
+    dataframe = pd.DataFrame(data, columns=['issuer', 'date', 'cena_posledna', 'mak', 'min', 'average', 'percentChange',
+                                            'kolichina', 'prometbest', 'vkupenPromet'])
+
+    for col in ['date', 'cena_posledna', 'mak', 'min', 'average', 'percentChange', 'kolichina', 'prometbest', 'vkupenPromet']:
+        dataframe[col] = dataframe[col].apply(convert_date if col == 'date' else convert_number)
+    return dataframe
+
+def filter_timeframe(dataframe, adder):
+    if adder == "y":
+        return dataframe.tail(min(len(dataframe), 365))
+    elif adder == "m":
+        return dataframe.tail(min(len(dataframe), 30))
+    elif adder == "w":
+        return dataframe.tail(min(len(dataframe), 7))
+    return dataframe
 
 def index(request):
     return HttpResponse("Hello, world. You're at the API index.")
-
 
 def update(request):
     start_time = time.time()
     pipeline()
     end_time = time.time()
-    return HttpResponse(f"Data processing completed in {end_time - start_time} seconds")
-
+    return HttpResponse(f"Data processing completed in {end_time - start_time:.2f} seconds")
 
 def price(request, option1, adder):
-    conn = sqlite3.connect("./databases/final_stock_data.db")
-    curs = conn.cursor()
-
-    curs.execute("SELECT * FROM stock_prices WHERE issuer = ?", (option1,))
-    data = curs.fetchall()
-
-    conn.close()
-    dataframe = pd.DataFrame(data, columns=['issuer', 'date', 'cena_posledna', 'mak', 'min', 'average', 'percentChange',
-                                            'kolichina', 'prometbest', 'vkupenPromet'])
-
-    dataframe['date'] = dataframe['date'].apply(convert_date).astype(int)
-    dataframe['cena_posledna'] = dataframe['cena_posledna'].apply(convert_number)
-    dataframe['mak'] = dataframe['mak'].apply(convert_number)
-    dataframe['min'] = dataframe['min'].apply(convert_number)
-    dataframe['average'] = dataframe['average'].apply(convert_number)
-    dataframe['percentChange'] = dataframe['percentChange'].apply(convert_number)
-    dataframe['kolichina'] = dataframe['kolichina'].apply(convert_number)
-    dataframe['prometbest'] = dataframe['prometbest'].apply(convert_number)
-    dataframe['vkupenPromet'] = dataframe['vkupenPromet'].apply(convert_number)
-
-    df2 = pd.DataFrame()
-    df2['time'] = dataframe['date']
-    df2['close'] = dataframe['cena_posledna']
-
-    df2 = df2.dropna(subset=['close', 'time'])
-    df2 = df2.sort_values(by=['time'])
-    if adder == "y":
-        df2 = df2.tail(min(len(df2), 365))
-    elif adder == "m":
-        df2 = df2.tail(min(len(df2), 30))
-    elif adder == "w":
-        df2 = df2.tail(min(len(df2), 7))
-    df2 = df2.to_json(orient="records")
-
-    return HttpResponse(df2)
-
+    data = fetch_data("SELECT * FROM stock_prices WHERE issuer = ?", (option1,))
+    dataframe = preprocess_stock_data(data)
+    df2 = dataframe[['date', 'cena_posledna']].rename(columns={'date': 'time', 'cena_posledna': 'close'}).dropna()
+    df2 = filter_timeframe(df2.sort_values(by='time'), adder)
+    return HttpResponse(df2.to_json(orient="records"))
 
 def symbols(request):
-    conn = sqlite3.connect("./databases/final_stock_data.db")
-    curs = conn.cursor()
-
-    curs.execute("SELECT * FROM tickers")
-    data = curs.fetchall()
-    conn.close()
-
-    flattened_list = [item for sublist in data for item in sublist]
-
-    return HttpResponse(json.dumps(flattened_list))
-
+    data = fetch_data("SELECT * FROM tickers")
+    return HttpResponse(json.dumps([item for sublist in data for item in sublist]))
 
 def technical_analysis(request, option1, adder):
-    conn = sqlite3.connect("./databases/final_stock_data.db")
-    curs = conn.cursor()
+    try:
+        data = fetch_data("SELECT * FROM stock_prices WHERE issuer = ?", (option1,))
+        if not data:
+            return JsonResponse({"error": "No data found for the specified issuer."}, status=404)
 
-    curs.execute("SELECT * FROM stock_prices WHERE issuer = ?", (option1,))
-    data = curs.fetchall()
+        dataframe = preprocess_stock_data(data)
+        df2 = pd.DataFrame({
+            'time': dataframe['date'],
+            'close': dataframe['cena_posledna'],
+            'high': dataframe['mak'],
+            'low': dataframe['min'],
+        }).dropna(subset=['close', 'time'])
 
-    conn.close()
-    dataframe = pd.DataFrame(data, columns=['issuer', 'date', 'cena_posledna', 'mak', 'min', 'average', 'percentChange',
-                                            'kolichina', 'prometbest', 'vkupenPromet'])
+        df2 = df2.sort_values(by='time')
+        df2 = filter_timeframe(df2, adder)
 
-    dataframe['date'] = dataframe['date'].apply(convert_date).astype(int)
-    dataframe['cena_posledna'] = dataframe['cena_posledna'].apply(convert_number)
-    dataframe['mak'] = dataframe['mak'].apply(convert_number)
-    dataframe['min'] = dataframe['min'].apply(convert_number)
-    dataframe['average'] = dataframe['average'].apply(convert_number)
-    dataframe['percentChange'] = dataframe['percentChange'].apply(convert_number)
-    dataframe['kolichina'] = dataframe['kolichina'].apply(convert_number)
-    dataframe['prometbest'] = dataframe['prometbest'].apply(convert_number)
-    dataframe['vkupenPromet'] = dataframe['vkupenPromet'].apply(convert_number)
+        if df2.empty:
+            return JsonResponse({"error": "No data available for the specified timeframe."}, status=404)
 
-    df2 = pd.DataFrame()
-    df2['time'] = dataframe['date']
-    df2['close'] = dataframe['cena_posledna']
-    df2['high'] = dataframe['mak']
-    df2['low'] = dataframe['min']
+        window = len(df2)
+        technical_indicators = [
+            (calculate_sma, ['sma']),
+            (calculate_ema, ['ema']),
+            (calculate_wma, ['wma']),
+            (calculate_hma, ['hma']),
+            (calculate_rsi, ['rsi']),
+            (calculate_stochastic, ['stochastic_k', 'stochastic_d']),
+            (calculate_macd, ['macd', 'macd_signal']),
+            (calculate_cci, ['cci']),
+            (calculate_williams_r, ['williams_r']),
+            (calculate_ichimoku, ['ichimoku_conversion', 'ichimoku_base']),
+        ]
 
-    df2 = df2.dropna(subset=['close', 'time'])
-    df2 = df2.sort_values(by=['time'])
-    if adder == "y":
-        df2 = df2.tail(min(len(df2), 365))
-    elif adder == "m":
-        df2 = df2.tail(min(len(df2), 30))
-    elif adder == "w":
-        df2 = df2.tail(min(len(df2), 7))
+        for func, cols in technical_indicators:
+            result = func(df2, window)
+            if isinstance(result, pd.DataFrame):
+                df2[cols] = result
+            elif isinstance(result, tuple):
+                for col, res in zip(cols, result):
+                    df2[col] = res
+            else:
+                df2[cols[0]] = result
 
-    df2 = df2.sort_values(by=['time'], ascending=False)
-    window = len(df2)
+        latest_data = df2.tail(1).to_json(orient="records")
+        return HttpResponse(latest_data, content_type="application/json")
 
-    df2['sma'] = calculate_sma(df2, window)
-    df2['ema'] = calculate_ema(df2, window)
-    df2['wma'] = calculate_wma(df2, window)
-    df2['hma'] = calculate_hma(df2, window)
-    df2['rsi'] = calculate_rsi(df2, window)
-    df2['stochastic_k'], df2['stochastic_d'] = calculate_stochastic(df2, window)
-    df2['macd'], df2['macd_signal'] = calculate_macd(df2, window)
-    df2['cci'] = calculate_cci(df2, window)
-    df2['williams_r'] = calculate_williams_r(df2, window)
-    df2['ichimoku_conversion'], df2['ichimoku_base'] = calculate_ichimoku(df2, window)
-
-    df2 = df2[-1:].to_json(orient="records")
-
-    return HttpResponse(df2)
-
+    except Exception as e:
+        return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
 
 def fundamental_analysis(request, issuer):
-    conn = sqlite3.connect("./databases/final_stock_data.db")
-    curs = conn.cursor()
-
-    curs.execute("SELECT * FROM news WHERE company_code = ?", (issuer,))
-    data = curs.fetchall()
-    data = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name',
-                                       'sentiment', 'probability'])
-
-    data['date'] = pd.to_datetime(data['date'])
-    data.sort_values(by=['date'], ascending=False, inplace=True)
-
-    data = data[:2]
-    data = data.to_json(orient="records")
-    return HttpResponse(data)
-
+    data = fetch_data("SELECT * FROM news WHERE company_code = ?", (issuer,))
+    dataframe = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name',
+                                            'sentiment', 'probability'])
+    dataframe['date'] = pd.to_datetime(dataframe['date']).sort_values(ascending=False)
+    return HttpResponse(dataframe.head(2).to_json(orient="records"))
 
 def news_article(request, document_id):
-    conn = sqlite3.connect("./databases/final_stock_data.db")
-    curs = conn.cursor()
-
-    curs.execute("""SELECT * FROM news WHERE document_id = ?""", (document_id,))
-    data = curs.fetchall()
-    data = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name',
-                                       'sentiment', 'probability'])
-
-    data = data.to_json(orient="records")
-    return HttpResponse(data)
-
+    data = fetch_data("SELECT * FROM news WHERE document_id = ?", (document_id,))
+    dataframe = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name',
+                                            'sentiment', 'probability'])
+    return HttpResponse(dataframe.to_json(orient="records"))
 
 def news(request):
-    conn = sqlite3.connect("./databases/final_stock_data.db")
-    curs = conn.cursor()
-
-    curs.execute("""SELECT * FROM news ORDER BY date DESC LIMIT 100""")
-    data = curs.fetchall()
-
-    data = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name',
-                                       'sentiment', 'probability'])
-
-    data = data.to_json(orient="records")
-    return HttpResponse(data)
-
+    data = fetch_data("SELECT * FROM news ORDER BY date DESC LIMIT 100")
+    dataframe = pd.DataFrame(data, columns=['document_id', 'date', 'description', 'content', 'company_code', 'company_name',
+                                            'sentiment', 'probability'])
+    return HttpResponse(dataframe.to_json(orient="records"))
 
 def lstm_prediction(request, issuer):
-    # Connect to SQLite database
-    conn = sqlite3.connect("./databases/final_stock_data.db")
-    curs = conn.cursor()
-
-    # Fetch data for the given issuer
-    curs.execute("""SELECT * FROM stock_prices WHERE issuer = ?""", (issuer,))
-    data = curs.fetchall()
-    conn.close()
-
-    # Create a DataFrame
-    dataframe = pd.DataFrame(data, columns=['issuer', 'date', 'cena_posledna', 'mak', 'min', 'average',
-                                            'percentChange', 'kolichina', 'prometbest', 'vkupenPromet'])
-
-    # Convert columns to appropriate formats
-    dataframe['date'] = dataframe['date'].apply(convert_date).astype(int)
-    dataframe['cena_posledna'] = dataframe['cena_posledna'].apply(convert_number)
-
-    # Prepare a smaller DataFrame with only necessary columns
-    df2 = pd.DataFrame()
-    df2['time'] = dataframe['date']
-    df2['close'] = dataframe['cena_posledna']
-    df2['issuer'] = dataframe['issuer']
-
-    # Sort values and set index
-    df2 = df2.sort_values(by=['time'])
+    data = fetch_data("SELECT * FROM stock_prices WHERE issuer = ?", (issuer,))
+    dataframe = preprocess_stock_data(data)
+    df2 = dataframe[['date', 'cena_posledna']].rename(columns={'date': 'time', 'cena_posledna': 'close'})
     df2['time'] = pd.to_datetime(df2['time'], unit="s")
     df2.set_index('time', inplace=True)
-    df2.sort_index(inplace=True)
 
-    # Get the last three closing prices for prediction
     close_prices = df2['close'].values
     if len(close_prices) < 3:
         return JsonResponse({"error": "Not enough data to make a prediction"}, status=400)
 
-    last_three_days = close_prices[-3:]  # Get the last three prices
-    input_data = np.array(last_three_days).reshape((1, 3, 1))  # Reshape for LSTM input (1 sample, 3 timesteps, 1 feature)
-
-    # Load the trained LSTM model
+    input_data = np.array(close_prices[-3:]).reshape((1, 3, 1))
     model = load_model("./stock_lstm.keras")
+    predicted_price = model.predict(input_data)[0][0]
 
-    # Predict the next day's price
-    prediction = model.predict(input_data)
-    predicted_price = int(prediction[0][0])  # Extract the single predicted value
-
-    # Return the prediction as JSON
-    return JsonResponse({"predicted_price": predicted_price/269})
+    return JsonResponse({"predicted_price": predicted_price / 269})

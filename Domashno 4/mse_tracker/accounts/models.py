@@ -3,8 +3,6 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import Group, Permission
 
-
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
         if not email:
@@ -35,14 +33,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     groups = models.ManyToManyField(
         Group,
-        related_name="customuser_set",  # Use a unique related_name
+        related_name="customuser_set",
         blank=True,
         help_text="The groups this user belongs to.",
         verbose_name="groups",
     )
     user_permissions = models.ManyToManyField(
         Permission,
-        related_name="customuser_set",  # Use a unique related_name
+        related_name="customuser_set",
         blank=True,
         help_text="Specific permissions for this user.",
         verbose_name="user permissions",
@@ -55,8 +53,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 class Stock(models.Model):
-    ticker = models.CharField(max_length=10, unique=True)  # Stock ticker symbol
-    name = models.CharField(max_length=255)  # Stock name
+    ticker = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.ticker
@@ -68,7 +66,7 @@ class Watchlist(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'stock')  # Ensure no duplicate watchlist items for a user
+        unique_together = ('user', 'stock')
 
     def __str__(self):
         return f"{self.user.email} - {self.stock.ticker}"
