@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./mse_tracker
+      dockerfile: Dockerfile
+    command: python manage.py runserver 127.0.0.1:8000
+    volumes:
+      - ./mse_tracker:/app
+    ports:
+      - "8000:8000"
